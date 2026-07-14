@@ -207,24 +207,18 @@ assert dec.decrypt(e1) == [seed(99)]
 
 ## Gotchas
 
-- **`tests/test_contract_spec.py` is currently broken** — it contains an unresolved
-  merge conflict (duplicated `for` loops, e.g. `RUNTIME_FILES` vs `RUNTIME_MODULES`)
-  that causes an `IndentationError` at collection time and also lacks the required
-  metadata header. As a result a plain `pytest` aborts during collection (the bad
-  file interrupts the whole run).
-- **Excluding the file does NOT make the suite green.** Running
-  `pytest --ignore=tests/test_contract_spec.py` lets the other modules collect,
-  but `tests/test_metadata_headers.py` still fails: it globs
-  `pcea/*.py` and `tests/*.py` on disk, and `tests/test_contract_spec.py` is
-  still present without the required header line. So the exclusion run reports
-  one failure (the metadata-header test) with the rest passing — not a clean
-  pass. To actually get a green suite you must fix the file (resolve the merge
-  conflict and add the header), not merely skip it. Re-derive the exact pass
-  count from `pytest -q` rather than trusting a hard-coded number here.
-  The intended logic lives in `pcea/contract.py` (use `RUNTIME_MODULES` and
-  `FORBIDDEN_UCNS_SYMBOLS`); resolving this file is the natural first fix.
-- CI (`contract-boundary.yml`) runs only `test_contract_spec.py`, so the broken file
-  blocks that gate too.
+- **`tests/test_contract_spec.py` is the release gate.** It (and the whole
+  suite) is green today — a plain `pytest -q` passes (91 passed, 21 skipped at
+  time of writing; re-derive the exact count rather than trusting it here). An
+  earlier revision of this file carried an unresolved merge conflict
+  (`RUNTIME_FILES` vs `RUNTIME_MODULES`) that broke collection; that is resolved.
+  The intended logic lives in `pcea/contract.py` (`RUNTIME_MODULES`,
+  `FORBIDDEN_UCNS_SYMBOLS`).
+- **`tests/test_metadata_headers.py` globs `pcea/*.py` and `tests/*.py`** and
+  enforces the `# ratios:` seal on line 1 and the provenance header on line 2 of
+  every runtime/test module — so any new file under `pcea/` or `tests/` must
+  carry both, or that test fails.
+- CI (`contract-boundary.yml`) runs `test_contract_spec.py` as the release gate.
 
 ---
 
