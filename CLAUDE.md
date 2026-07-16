@@ -226,8 +226,8 @@ assert dec.decrypt(e1) == [seed(99)]
 
 | Repo | Role |
 |------|------|
-| The-Interdependency/interdependent-lib | Meta-package bundling pcea + ptca + ucns + aimmh |
-| The-Interdependency/ptca | Tensor context architecture (shares the 53-prime-circle and ±3 heptagram adjacency) |
+| The-Interdependency/interdependent-lib | Meta-package bundling pcea + ptcna + ucns + aimmh |
+| The-Interdependency/ptcna | Consolidated prime-tensor stack (neural/circle/seed/core; supersedes the former pcna/pcta/pcsa repos). Its core layer shares the 53-prime-circle and ±3 heptagram adjacency |
 | The-Interdependency/ucns | Arithmetic substrate; PCEA consumes only its forward behavior (see contract) |
 
 ---
