@@ -248,6 +248,5 @@ export default defineMsdmdCollection({
     }
   ],
   "gaps": [],
-  "repo": "pcea",
-  "source_commit": "fea83bb"
+  "repo": "pcea"
 });

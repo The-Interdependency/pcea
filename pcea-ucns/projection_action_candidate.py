@@ -29,10 +29,14 @@ MEASURED PROPERTIES (all reproducible; harness functions below):
   agreement action(a,action(b,g)) == action(b,action(a,g)) holds 200/200
   at width 3. Two-sided secret entropy near-uniform (ratio to max >= 0.96).
 
-STATUS: BROKEN by Open Attack 1 (see attack1_minkowski_break.py).
+STATUS: DEPRECATED by Open Attack 1 (see attack1_minkowski_break.py).
 The text below describes the candidate as it stood BEFORE Attack 1 was
 run; retained for the record. The action is invertible by Minkowski
 set-basis recovery — one-way against the quotient, wide open to set-basis.
+
+The active engineering replacement is provisioned symmetric PCEA. A reviewed
+hybrid KEM/DH path remains policy-gated open research. Neither replacement
+turns this failed candidate into a security primitive.
 
 ORIGINAL STATUS (pre-Attack-1): CANDIDATE, NOT A CIPHER. This is the first construction in the
 investigation to survive every attack tried, and the first counterexample

@@ -6,6 +6,11 @@ job is to make candidate constructions fail loudly, measure the ones that do
 not fail immediately, and preserve the exact boundary between a usable symmetric
 PCEA transform and speculative UCNS-native key establishment.
 
+The lossy set-projection action is **DEPRECATED**, not an active security
+candidate. Minkowski set-basis recovery broke it. Its source and tests remain
+only as negative-control evidence. Current engineering uses provisioned
+symmetric PCEA; the hybrid KEM/DH alternative remains policy-gated research.
+
 ## What this proving ground can do
 
 1. **Refute hiding places for private key material.**
@@ -53,7 +58,7 @@ PCEA transform and speculative UCNS-native key establishment.
 | Baseline UCNS factor attacks | `attack_harness.py`, `positional_attack.py` | Check whether carrier choice, oracle domains, or fixed-carrier positions hide keys | Mostly negative: easy domains are forbidden |
 | Factor-count and non-uniqueness | `three_factor_attack.py`, `factor_count_sweep.py` | Test whether more factors hide a designated private factor | Partial smearing, not a safe KEM foundation by itself |
 | Key-space restriction | `quotient_attack.py`, `pruning_scaling.py` | Ask whether the private factor is unique inside a finite key space and whether pruning beats brute search | Useful distinction; cheap pruning measured as constant-factor, not a proof |
-| Structural readout breaks | `prefix_read_break.py`, `attack1_minkowski_break.py` | Look for direct reconstruction or algebraic inversion that bypasses key-space search | Negative gates: tested candidate families break |
+| Structural readout breaks | `prefix_read_break.py`, `attack1_minkowski_break.py` | Look for direct reconstruction or algebraic inversion that bypasses key-space search | Negative gates; lossy set-projection is deprecated |
 | Gonal/state communication | `gonal_architecture.py` | Explore PCEA-advanced private gonal rotation for state/token communication | Experimental; further bridge/attack gates remain |
 | Candidate ledger | `candidate-ledger.json` | Track every UCNS-assisted PCEA candidate, its claim, public/private material, known attacks, harnesses, status, and next attack | Process guardrail; not a security proof |
 | Option D one-way-map gate | `one_way_map_gate.py` | Reject UCNS-native one-way-map sketches that lack quotient, prefix, set-basis, catalogue, enumeration, MITM, active, correctness, and scaling attack coverage | Attack-agenda gate; not a security proof |

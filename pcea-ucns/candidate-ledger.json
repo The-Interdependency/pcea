@@ -2,6 +2,7 @@
   "schema_version": 1,
   "status_values": [
     "broken",
+    "deprecated",
     "forbidden",
     "survives-current-harness",
     "open-research",
@@ -116,8 +117,9 @@
       "known_attacks": ["Minkowski set-basis recovery solves the projected action", "attack cost beats brute force asymptotically"],
       "harness": "pcea-ucns/projection_action_candidate.py; pcea-ucns/attack1_minkowski_break.py",
       "tests": ["tests/test_projection_action_candidate.py", "tests/test_attack1_minkowski_break.py"],
-      "status": "broken",
-      "next_attack": "Closed as a KEM candidate; any future lossy map must defeat both quotient inversion and set-basis inversion."
+      "status": "deprecated",
+      "replacement": "provisioned-symmetric-pcea; hybrid-kem-keys-pcea remains policy-gated open research",
+      "next_attack": "None. Preserve the break as a negative control; a future lossy map is a new candidate and must defeat both quotient inversion and set-basis inversion."
     },
     {
       "id": "pcea-advanced-gonal-state-channel",

@@ -50,4 +50,15 @@ def test_option_specs_are_registered_in_ledger() -> None:
         assert spec_id in candidates
         assert "pcea-ucns/option_family_specs.py" in candidates[spec_id]["harness"]
         assert "tests/test_option_family_specs.py" in candidates[spec_id]["tests"]
+
+
+def test_broken_lossy_projection_is_deprecated_with_supported_boundary() -> None:
+    ledger = json.loads(LEDGER.read_text(encoding="utf-8"))
+    candidates = {candidate["id"]: candidate for candidate in ledger["candidates"]}
+    failed = candidates["lossy-set-projection-action"]
+
+    assert failed["status"] == "deprecated"
+    assert "provisioned-symmetric-pcea" in failed["replacement"]
+    assert candidates["provisioned-symmetric-pcea"]["status"] == "recommended-engineering"
+    assert "security primitive" not in failed["replacement"].lower()
 # ratios: loc_comments=35:2 imports_exports=4:4 calls_definitions=11:4
