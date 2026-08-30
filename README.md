@@ -8,6 +8,15 @@ PCEA encrypts pre-quantized integer neural architecture state using the relation
 
 Runtime state is structured as a list of seeds. Each seed is a `7×7` integer array: 7 circles × 7 tensors.
 
+## Security status
+
+**Experimental research software.** PCEA has not undergone independent
+cryptographic review and is not claimed suitable for protecting sensitive or
+production data. Version 0.1.0, if released, is a research release of the
+symmetric transform and its falsification/proving harnesses. Where real-world
+confidentiality is required, use reviewed standard cryptography rather than
+substituting PCEA for it.
+
 ## Algorithm
 
 For each integer value at address `(seed_idx, circle_idx, tensor_idx)`:
@@ -63,7 +72,7 @@ assert dec.decrypt(e2) == [state2]
 
 The shipped `pcea/` package is the symmetric, state-synchronized transform described above. Its correctness and contract tests live in `tests/test_cipher.py`, `tests/test_codec.py`, `tests/test_kdf.py`, `tests/test_instance.py`, and `tests/test_contract_spec.py`.
 
-The `pcea-ucns/` directory is different: it is an attack-and-feasibility workspace for possible UCNS-native key-establishment or gonal/state-communication layers around PCEA. Those files do **not** upgrade the symmetric PCEA runtime into a proven public-key encryption system. They record candidate constructions, measured breaks, and open gates for any future PCEA-UCNS layer. See `pcea-ucns/README.md` for the concrete proving-ground workflow.
+The `pcea-ucns/` directory is different: it is an attack-and-feasibility workspace for possible UCNS-native key-establishment, authenticated-session, or gonal/state-communication layers around PCEA. Those files do **not** upgrade the symmetric PCEA runtime into a proven public-key encryption or production-secure session system. They record candidate constructions, measured breaks, surviving regression checks, and open gates. See `pcea-ucns/README.md` for the concrete proving-ground workflow.
 
 Important testing boundaries:
 
@@ -71,6 +80,7 @@ Important testing boundaries:
 - PCEA-UCNS tests are attack/regression harnesses. They are skipped when `ucns` is not installed, keeping the symmetric runtime testable without UCNS.
 - Passing a PCEA-UCNS harness means only that the measured behavior has not drifted; it is not a proof of cryptographic security.
 - Several PCEA-UCNS harnesses intentionally pin breaks or negative findings, including oracle-domain factorization, positional/factor-count attacks, prefix-read reconstruction, and Minkowski set-basis recovery.
+- `ratcheted_session.py` is a non-runtime prototype around provisioned PCEA state; its current replay/transcript/rollback/key-separation tests are prerequisites for harder attack work, not a promotion certificate.
 - The gonal architecture tests include a measured PCEA-advanced candidate that resists simple frequency/known-plaintext probes in the harness, but the module still marks further attacks and the 53→32 bridge as gates before any shipped `gonal_cipher.py`.
 
 Useful commands:
@@ -78,6 +88,7 @@ Useful commands:
 ```bash
 python -m pytest -q
 python -m pytest -q tests/test_cipher.py tests/test_codec.py tests/test_kdf.py tests/test_instance.py tests/test_contract_spec.py
+python -m pytest -q tests/test_ratcheted_session.py tests/test_option_family_specs.py
 python -m pytest -q tests/test_attack_harness.py tests/test_positional_attack.py tests/test_quotient_attack.py tests/test_prefix_read_break.py tests/test_projection_action_candidate.py tests/test_pruning_scaling.py tests/test_attack1_minkowski_break.py tests/test_three_factor_attack.py tests/test_factor_count_sweep.py tests/test_gonal_architecture.py
 ```
 
@@ -95,7 +106,7 @@ This keeps PCEA cryptographic claims decoupled from UCNS analytic-frontier work.
 Enforcement:
 
 - `tests/test_contract_spec.py` is a release gate for this boundary.
-- `.github/workflows/contract-boundary.yml` runs this gate in CI for pull requests and pushes to `main`.
+- `.github/workflows/contract-boundary.yml` runs the **full repository suite** on Python 3.9, 3.11, and 3.13 for pull requests and pushes to `main`, and also builds/installs the declared wheel outside the source tree as a release-artifact smoke test.
 
 ## Install
 
