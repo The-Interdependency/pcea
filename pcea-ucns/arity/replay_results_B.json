@@ -1,0 +1,393 @@
+{
+  "schema": "pcea-arity-replay-results-B-v1",
+  "actor": "DeepSeek",
+  "role": "B",
+  "phase_reached": "PHASE1_EXACT_STRUCTURAL_MICROSCOPE",
+  "f0_baseline_commit": "ecf2ca0dec38bef29382e02121b0edde66763aa9",
+  "f1_candidate_commit": "e5fb94defae29a4c1b6d3e796763d575b34e4c08",
+  "freeze_json_f1_field_at_f1_commit": "PENDING_F1_SHA_UNTIL_CANDIDATE_COMMIT",
+  "parameters": {
+    "arities": [
+      2,
+      3,
+      5,
+      7
+    ],
+    "non_contributor_value": 0,
+    "offsets": [
+      0,
+      -3,
+      3,
+      -1,
+      1,
+      -2,
+      2
+    ],
+    "plaintext_values": [
+      0,
+      1,
+      -1,
+      2,
+      127
+    ],
+    "secret_bits": [
+      8,
+      12
+    ],
+    "secret_trials": 16,
+    "seed_index": 0,
+    "target_circle": 0,
+    "target_tensor": 0,
+    "word_bits": 8
+  },
+  "rows": [
+    {
+      "variant": "pcea",
+      "arity": 2,
+      "maximum_algebraic_degree": 2,
+      "full_degree_output_bits": 20,
+      "output_bits_examined": 40,
+      "full_degree_fraction": 0.5,
+      "mismatches_after_deleting_degree_n": 20,
+      "mismatch_fraction": 0.125,
+      "per_plaintext": {
+        "0": {
+          "full_degree_output_bits": 4,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 4,
+          "maximum_algebraic_degree": 2
+        },
+        "1": {
+          "full_degree_output_bits": 4,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 4,
+          "maximum_algebraic_degree": 2
+        },
+        "-1": {
+          "full_degree_output_bits": 4,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 4,
+          "maximum_algebraic_degree": 2
+        },
+        "2": {
+          "full_degree_output_bits": 4,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 4,
+          "maximum_algebraic_degree": 2
+        },
+        "127": {
+          "full_degree_output_bits": 4,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 4,
+          "maximum_algebraic_degree": 2
+        }
+      }
+    },
+    {
+      "variant": "pcea",
+      "arity": 3,
+      "maximum_algebraic_degree": 3,
+      "full_degree_output_bits": 15,
+      "output_bits_examined": 40,
+      "full_degree_fraction": 0.375,
+      "mismatches_after_deleting_degree_n": 15,
+      "mismatch_fraction": 0.046875,
+      "per_plaintext": {
+        "0": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 3
+        },
+        "1": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 3
+        },
+        "-1": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 3
+        },
+        "2": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 3
+        },
+        "127": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 3
+        }
+      }
+    },
+    {
+      "variant": "pcea",
+      "arity": 5,
+      "maximum_algebraic_degree": 5,
+      "full_degree_output_bits": 15,
+      "output_bits_examined": 40,
+      "full_degree_fraction": 0.375,
+      "mismatches_after_deleting_degree_n": 15,
+      "mismatch_fraction": 0.01171875,
+      "per_plaintext": {
+        "0": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 5
+        },
+        "1": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 5
+        },
+        "-1": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 5
+        },
+        "2": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 5
+        },
+        "127": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 5
+        }
+      }
+    },
+    {
+      "variant": "pcea",
+      "arity": 7,
+      "maximum_algebraic_degree": 7,
+      "full_degree_output_bits": 15,
+      "output_bits_examined": 40,
+      "full_degree_fraction": 0.375,
+      "mismatches_after_deleting_degree_n": 15,
+      "mismatch_fraction": 0.0029296875,
+      "per_plaintext": {
+        "0": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 7
+        },
+        "1": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 7
+        },
+        "-1": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 7
+        },
+        "2": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 7
+        },
+        "127": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 7
+        }
+      }
+    },
+    {
+      "variant": "prf",
+      "arity": 2,
+      "maximum_algebraic_degree": 2,
+      "full_degree_output_bits": 25,
+      "output_bits_examined": 40,
+      "full_degree_fraction": 0.625,
+      "mismatches_after_deleting_degree_n": 25,
+      "mismatch_fraction": 0.15625,
+      "per_plaintext": {
+        "0": {
+          "full_degree_output_bits": 5,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 5,
+          "maximum_algebraic_degree": 2
+        },
+        "1": {
+          "full_degree_output_bits": 5,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 5,
+          "maximum_algebraic_degree": 2
+        },
+        "-1": {
+          "full_degree_output_bits": 5,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 5,
+          "maximum_algebraic_degree": 2
+        },
+        "2": {
+          "full_degree_output_bits": 5,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 5,
+          "maximum_algebraic_degree": 2
+        },
+        "127": {
+          "full_degree_output_bits": 5,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 5,
+          "maximum_algebraic_degree": 2
+        }
+      }
+    },
+    {
+      "variant": "prf",
+      "arity": 3,
+      "maximum_algebraic_degree": 3,
+      "full_degree_output_bits": 15,
+      "output_bits_examined": 40,
+      "full_degree_fraction": 0.375,
+      "mismatches_after_deleting_degree_n": 15,
+      "mismatch_fraction": 0.046875,
+      "per_plaintext": {
+        "0": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 3
+        },
+        "1": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 3
+        },
+        "-1": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 3
+        },
+        "2": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 3
+        },
+        "127": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 3
+        }
+      }
+    },
+    {
+      "variant": "prf",
+      "arity": 5,
+      "maximum_algebraic_degree": 5,
+      "full_degree_output_bits": 15,
+      "output_bits_examined": 40,
+      "full_degree_fraction": 0.375,
+      "mismatches_after_deleting_degree_n": 15,
+      "mismatch_fraction": 0.01171875,
+      "per_plaintext": {
+        "0": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 5
+        },
+        "1": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 5
+        },
+        "-1": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 5
+        },
+        "2": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 5
+        },
+        "127": {
+          "full_degree_output_bits": 3,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 3,
+          "maximum_algebraic_degree": 5
+        }
+      }
+    },
+    {
+      "variant": "prf",
+      "arity": 7,
+      "maximum_algebraic_degree": 7,
+      "full_degree_output_bits": 25,
+      "output_bits_examined": 40,
+      "full_degree_fraction": 0.625,
+      "mismatches_after_deleting_degree_n": 25,
+      "mismatch_fraction": 0.0048828125,
+      "per_plaintext": {
+        "0": {
+          "full_degree_output_bits": 5,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 5,
+          "maximum_algebraic_degree": 7
+        },
+        "1": {
+          "full_degree_output_bits": 5,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 5,
+          "maximum_algebraic_degree": 7
+        },
+        "-1": {
+          "full_degree_output_bits": 5,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 5,
+          "maximum_algebraic_degree": 7
+        },
+        "2": {
+          "full_degree_output_bits": 5,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 5,
+          "maximum_algebraic_degree": 7
+        },
+        "127": {
+          "full_degree_output_bits": 5,
+          "output_bits_examined": 8,
+          "mismatches_after_deleting_degree_n": 5,
+          "maximum_algebraic_degree": 7
+        }
+      }
+    }
+  ],
+  "outcome_labels": {
+    "H_STRUCT": "SURVIVED_STRUCTURAL_ARITY",
+    "H_PCEA": "FALSIFIED_PCEA_SPECIFIC_ARITY",
+    "H_HARD": "UNRESOLVED",
+    "phase2_authorized": false
+  },
+  "phase2_authorized": false,
+  "hmmm": [
+    "Boolean ANF full-degree residual is one exact operationalization of direct arity, not a universal definition.",
+    "PRF reconstruction interpretation is documented in pcea-ucns/arity/replay_b/adapters.py and REPORT_B.md.",
+    "Actor A result files were seen before this replay; independence is recorded as contaminated in ACTOR_B_LOCK.json."
+  ]
+}
