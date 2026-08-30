@@ -1,0 +1,34 @@
+{
+  "F0": {
+    "BASELINE_FREEZE_V1_json_sha256": "f4644de3a3310990fb51ddab4e2e654171eeff246fc0601e097fbf07f68b5126",
+    "baseline_commit": "ecf2ca0dec38bef29382e02121b0edde66763aa9"
+  },
+  "F1": {
+    "candidate_commit": "e5fb94defae29a4c1b6d3e796763d575b34e4c08",
+    "freeze_json_sha256": "4960e5960add2cd43ba2749fe8bedf5f8f2a5ccf70dd041ded5f0c13b572c16c"
+  },
+  "PHASE3_GATE_json_sha256": "cd26c5c75443f603351a5f1c4447074cdd38ee790bfac78fcda0a58c74ea72a2",
+  "actor": "Codex",
+  "actor_result_commit": "aa65ebef260b4341ebc1a353b87e482d36639af3",
+  "artifact_hashes": {
+    "pcea-ucns/arity/PHASE3_GATE.json": "cd26c5c75443f603351a5f1c4447074cdd38ee790bfac78fcda0a58c74ea72a2",
+    "pcea-ucns/arity/REPORT_A.md": "57cfbab414daac1064dafa196a8949212bcbfbc8112961789e9d5d7d79cbb89c",
+    "pcea-ucns/arity/structural_results_A.json": "2072405be0b289d32f3adfbada37869b4a48dd4d873ba81fa766043125765214"
+  },
+  "deviation_or_contamination": [
+    "Protocol command name python was unavailable in this shell; existing /home/wayseer_interdependentway_org/.venvs/pcea/bin/python 3.12.3 was used for generation and tests."
+  ],
+  "hmmm": [
+    "H_HARD remains UNRESOLVED unless Phase 3 is reached.",
+    "No cryptographic security claim is made from this harness."
+  ],
+  "phase3_gate_authorized": false,
+  "phase_reached": "PHASE1_EXACT_STRUCTURAL_MICROSCOPE",
+  "preregistered_outcome_labels": {
+    "H_HARD": "UNRESOLVED",
+    "H_PCEA": "FALSIFIED_PCEA_SPECIFIC_ARITY",
+    "H_STRUCT": "SURVIVED_STRUCTURAL_ARITY"
+  },
+  "role": "A",
+  "schema": "pcea-arity-actor-lock-v1"
+}
