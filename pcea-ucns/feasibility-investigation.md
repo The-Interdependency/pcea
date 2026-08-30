@@ -61,19 +61,24 @@ only some recomposing pair, not the exact key.** (`positional_attack.py`)
 For `P = A ⊠ B ⊠ C` with C private: recompose 80/80, but the first split is
 **never** the clean (A⊠B, C) — 0/80. Ordered composition smears the
 private-factor boundary. Yet recursive peeling still recovers C ~49%.
-**Degraded, not defeated.** (`three_factor_attack.py`)
+Refreshed 2026-08-30 (denoms [8,5] = carrier 40, width 3, seed 13, 60
+trials): recompose 60/60, first-split-clean 0/60, recursive-peel 27/60
+(45%). **Degraded, not defeated.** (`three_factor_attack.py`)
 
 ### 5. Factor count is irrelevant; non-uniqueness looked fatal
 
 Historical runs found that recovery does not decay with factor count
-(2..6 factors: ~40-67%, flat). The full recursive-peel refresh is now
+(2..6 factors: ~40-67%, flat). Refreshed 2026-08-30 (denoms [8,5], width 2,
+seed 21, 40 trials each): 2 factors 22/40 (55%), 4 factors 24/40 (60%),
+6 factors 17/40 (42.5%) — still flat. The full recursive-peel refresh is now
 opt-in with `PCEA_UCNS_EXPENSIVE=1` because the legacy recursive UCNS solver
 uses exhaustive Fraction-heavy search for this probe.
 For a 5-factor product the search finds the true ordered (prefix, C) split
 0/80 and some other valid decomposition 80/80 — **the public product has
-many ordered factorizations.** This appeared to defeat any KEM: bind the
-secret to any decomposition and the attacker supplies one; bind it to the
-unique true one and honest parties cannot recover it. (`factor_count_sweep.py`)
+many ordered factorizations.** Refreshed (seed 21, 50 trials): 0/50 true,
+50/50 other. This appeared to defeat any KEM: bind the secret to any
+decomposition and the attacker supplies one; bind it to the unique true one
+and honest parties cannot recover it. (`factor_count_sweep.py`)
 
 ### 6. The quotient corrects the verdict (hardness relocated)
 

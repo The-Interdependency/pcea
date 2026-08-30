@@ -86,3 +86,35 @@ Usage Guidance:
   0 misplaced`.
 - Collection regeneration diffed byte-identical to the prior hand-edited
   collection except for the now-current `source_commit`.
+
+## 2026-08-30T19:54:00Z Proving-Ground Measurement Refresh
+
+### Applied
+- Refreshed the opt-in UCNS proving-ground measurements with the legacy
+  `ucns_recursive` API (via `interdependent-lib/libs/ucns/src`):
+  - `three_factor_recovery([8,5], width 3, seed 13, trials 60)`: recompose
+    60/60, first-split-clean 0/60, recursive-peel 27/60 (45%).
+  - `decay_sweep([8,5], width 2, seed 21, counts 2/4/6, 40 trials each)`:
+    22/40 (55%), 24/40 (60%), 17/40 (42.5%) — flat, no decay.
+  - `nonuniqueness([8,5], width 2, nfac 5, seed 21, trials 50)`:
+    0/50 true split, 50/50 other.
+- Recorded the refreshed figures with seeds/parameters in the harness
+  docstrings and `pcea-ucns/feasibility-investigation.md`; updated the two
+  affected ratio seals.
+
+### Remaining
+- Publish `0.2.0` to PyPI (currently published: `0.1.1`); upload was not performed.
+- Independent cryptographic/security review of `cipher.py`, `codec.py`, `kdf.py`.
+- Re-stamp ratio seals after any future `pcea_msdmd.ts` regeneration until
+  `.agents/skills/msdmd/collect.py` stamps them itself.
+
+### Verification
+- `PCEA_UCNS_EXPENSIVE=1 pytest -q tests/test_three_factor_attack.py
+  tests/test_factor_count_sweep.py`: `6 passed in 667.79s`.
+- Default proving-ground subset: `22 passed, 2 skipped` (opt-in lanes).
+- `ratios_check.py --root . --strict`: `30 covered / 0 gaps / 0 drift`.
+
+### hmmm
+- These remain measurements against the legacy `ucns_recursive` API, not
+  security claims; the lanes still refute UCNS-native key hiding and do not
+  promote any PCEA-UCNS key-establishment claim.

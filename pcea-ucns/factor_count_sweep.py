@@ -1,4 +1,4 @@
-# ratios: loc_comments=133:30 imports_exports=10:3 calls_definitions=32:8
+# ratios: loc_comments=133:33 imports_exports=10:3 calls_definitions=32:8
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Factor-count sweep + non-uniqueness diagnosis for PCEA-UCNS.
@@ -12,15 +12,18 @@ underlying cause.
 Two measurements at fixed carrier 40 (⟨2,5⟩):
 
 - DECAY, opt-in: recursive-peel recovery of the designated private factor as
-  factor count runs 2..6. Measured FLAT (~40-67%, noise, no downward
-  trend). More factors do not help. The current recursive UCNS API performs
+  factor count runs 2..6. Refreshed 2026-08-30 (denoms [8,5], width 2,
+  seed 21, counts 2/4/6, 40 trials each): 22/40 (55%), 24/40 (60%),
+  17/40 (42.5%) — flat, no downward trend. Historical 2..6 sweep: ~40-67%.
+  More factors do not help. The current recursive UCNS API performs
   exhaustive Fraction-heavy search for this probe, so the full historical
   sweep is not part of quick/default runs.
 
 - NON-UNIQUENESS (the cause): for a 5-factor product, how often does the
   search's split equal the TRUE ordered (prefix, C) versus some OTHER
-  decomposition. Measured: 0/80 true, 80/80 other. The public product
-  admits many ordered factorizations.
+  decomposition. Refreshed 2026-08-30 (denoms [8,5], width 2, seed 21,
+  trials 50): 0/50 true, 50/50 other (historical 80-trial run: 0/80 true,
+  80/80 other). The public product admits many ordered factorizations.
 
 Conclusion: factor count is irrelevant. Non-uniqueness defeats the KEM at
 every count. A shared secret cannot bind to a factorization that is not
@@ -195,4 +198,4 @@ if __name__ == "__main__":
         print(f"recursive UCNS API unavailable; sweep skipped: {UCNS_IMPORT_ERROR}")
     else:
         print(json.dumps(rep, indent=2))
-# ratios: loc_comments=133:30 imports_exports=10:3 calls_definitions=32:8
+# ratios: loc_comments=133:33 imports_exports=10:3 calls_definitions=32:8

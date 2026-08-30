@@ -1,4 +1,4 @@
-# ratios: loc_comments=103:31 imports_exports=10:2 calls_definitions=28:5
+# ratios: loc_comments=103:33 imports_exports=10:2 calls_definitions=28:5
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Three-factor positional attack for PCEA-UCNS.
@@ -23,8 +23,10 @@ MEASURE, not assert. Skipped without recursive UCNS APIs. The historical
 60-trial recursive-peel measurement is opt-in for test cost; quick runs keep
 a small deterministic smoke sample.
 
-Measured result (carrier 40, ⟨2,5⟩, width 3, seed 13): recompose 80/80,
-first-split-clean 0/80, recursive-peel-recovers-C ~49%. Interpretation:
+Measured result (denoms [8,5] = carrier 40, width 3, seed 13, trials 60,
+2026-08-30 refresh): recompose 60/60, first-split-clean 0/60,
+recursive-peel-recovers-C 27/60 (45%). Historical 80-trial run: recompose
+80/80, first-split-clean 0/80, recursive-peel-recovers-C ~49%. Interpretation:
 ordered triple composition SMEARS the private-factor boundary (the single
 split never cleanly isolates C), but recursive peeling still recovers C
 about half the time. Three factors degrade the attack measurably; they do
@@ -160,4 +162,4 @@ if __name__ == "__main__":
         print(f"recursive UCNS API unavailable; three-factor harness skipped: {UCNS_IMPORT_ERROR}")
     else:
         print(json.dumps(rep, indent=2))
-# ratios: loc_comments=103:31 imports_exports=10:2 calls_definitions=28:5
+# ratios: loc_comments=103:33 imports_exports=10:2 calls_definitions=28:5
