@@ -23,3 +23,33 @@ jobs:
       - name: Run full repository test suite
         run: |
           PYTHONPATH=. python -m pytest -q
+
+  release-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Build wheel from declared package metadata
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip wheel . --no-deps --wheel-dir dist
+      - name: Install wheel outside the source tree and smoke-test public package
+        shell: bash
+        run: |
+          set -euo pipefail
+          wheel=$(printf '%s\n' dist/pcea-*.whl)
+          test -f "$wheel"
+          python -m venv /tmp/pcea-release-smoke
+          /tmp/pcea-release-smoke/bin/python -m pip install --no-deps "$wheel"
+          cd /tmp
+          /tmp/pcea-release-smoke/bin/python - <<'PY'
+          from importlib.metadata import version
+          import pcea
+
+          assert version("pcea") == "0.1.0"
+          assert callable(pcea.encrypt_state)
+          assert callable(pcea.decrypt_state)
+          assert pcea.PCEAInstance is not None
+          PY
