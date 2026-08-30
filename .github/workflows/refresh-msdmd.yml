@@ -1,0 +1,38 @@
+name: refresh msdmd collection point
+
+on:
+  push:
+    branches: [feat/release-readiness-0.1.0]
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+      - name: Regenerate canonical collection point
+        run: |
+          PYTHONPATH=.agents/skills python -m msdmd.collect \
+            --root . \
+            --repo pcea \
+            --out pcea_msdmd.ts
+      - name: Commit generated result if changed
+        run: |
+          if git diff --quiet -- pcea_msdmd.ts; then
+            echo 'pcea_msdmd.ts already fresh'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add pcea_msdmd.ts
+          git commit -m 'chore(msdmd): refresh collection point'
+          git push
+
+# Usage: one-shot maintenance workflow for this release-readiness branch only.
+# Remove immediately after pcea_msdmd.ts is regenerated and verified.
