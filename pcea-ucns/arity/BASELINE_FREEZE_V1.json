@@ -1,0 +1,44 @@
+{
+  "schema": "pcea-arity-baseline-freeze-v1",
+  "status": "FROZEN_PRE_EXECUTION",
+  "repository": "The-Interdependency/pcea",
+  "baseline_branch": "main",
+  "baseline_commit": "ecf2ca0dec38bef29382e02121b0edde66763aa9",
+  "baseline_tree": "48900a7f554baae697e202acef0c87eb10d9564c",
+  "package_version_at_baseline": "0.2.0",
+  "experiment_protocol_branch": "research/arity-v1-refreeze",
+  "skill_snapshot": {
+    "source_repository": "The-Interdependency/skill-lib",
+    "source_commit": "ee553891b17662195f522912afa8fd8914a904a7",
+    "installed": ["manifest", "meta-module-build", "msdmd", "test-build"]
+  },
+  "frozen_runtime_paths": {
+    "pcea/__init__.py": "5cbfde93cb40d99b4c531ef45286a07280478fb9",
+    "pcea/cipher.py": "41244f3dc567b0024d06a7ab8450e986668f9384",
+    "pcea/codec.py": "99ba31dbdb2a9979210bff738a714bf725a53ab7",
+    "pcea/contract.py": "cb2239e18765e0a59e51742e77ac4c424ccc1b1e",
+    "pcea/instance.py": "4ea1835d4bfcb14264d05133cf3c8b755d0def30",
+    "pcea/kdf.py": "87c763908d6571ca9dfcc4a5259b0b5f0acde182",
+    "pcea/primes.py": "e4ca26419c1ce0f61b1ae9bccb5707628c8fd446"
+  },
+  "frozen_metadata_paths": {
+    "AGENTS.md": "b0e5631496d0eaac477050f1280d4a1c45ee7a00",
+    ".agents/skills/README.md": "1762469e57b4f6a64fc53ff5b2d687235fd1fea6",
+    "pyproject.toml": "a4c2d9449c77765c0698afb869ecfd08bc1c5483"
+  },
+  "verified_current_state_key_relation": {
+    "declared_arity": 3,
+    "contributors": ["circle", "circle-3 mod 7", "circle+3 mod 7"],
+    "source": "pcea/cipher.py::_contributors",
+    "note": "This is a triadic per-cell prior-state contributor relation embedded in a seven-circle topology. Seven-circle shape is not classified as direct arity seven by this freeze."
+  },
+  "excluded_from_baseline": {
+    "pcea-ucns/ratcheted_session.py": "not present on baseline main; the arity v1 experiment is scoped to the current PCEA transform and research-only matched-secret adapters, not the unmerged release-readiness prototype"
+  },
+  "mutation_rule": "Actors may not modify frozen_runtime_paths. Any mismatch is BLOCKED_FREEZE_DRIFT.",
+  "claim_rule": "No structural or attack survival result is a cryptographic security claim.",
+  "hmmm": [
+    "Whether Boolean ANF full-degree residual is the best cryptographic operationalization of broader arity remains unresolved and is therefore paired with matched PRF controls and attack tests.",
+    "Independent cryptographic review remains downstream of this experiment, not a substitute for it."
+  ]
+}
