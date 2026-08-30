@@ -15,10 +15,10 @@
       "public_material": ["algorithm parameters", "message numbers", "authenticated associated data", "optional UCNS context identifiers"],
       "private_material": ["provisioned seed", "traffic secrets", "last_state", "ratchet state"],
       "known_attacks": ["wrong-key recovery", "replay", "reordering", "truncation", "ratchet desynchronization", "unauthenticated state advancement"],
-      "harness": "pcea-ucns/option_family_specs.py",
-      "tests": ["tests/test_option_family_specs.py"],
+      "harness": "pcea-ucns/option_family_specs.py; pcea-ucns/ratcheted_session.py",
+      "tests": ["tests/test_option_family_specs.py", "tests/test_ratcheted_session.py"],
       "status": "recommended-engineering",
-      "next_attack": "Build a non-runtime ratcheted-session prototype and test replay, transcript mismatch, rollback-safe decrypt failure, and resynchronization metadata leakage."
+      "next_attack": "Attack the prototype for truncation, session-id reuse, state-compromise/forward-secrecy limits, persistent rollback, concurrency, and resynchronization behavior; require independent cryptographic review before runtime promotion."
     },
     {
       "id": "hybrid-kem-keys-pcea",
