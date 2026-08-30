@@ -1,8 +1,11 @@
-name: manifest drift check
+name: manifest and skill drift check
 
 # Living-spec gate: fails if CLAUDE.md's generated manifest block has drifted
 # from pyproject.toml / the repo tree. Refresh locally with:
 #   python .agents/skills/manifest/generate.py --write
+#
+# Canonical-skill gate: checks the vendored subset byte-for-byte against the
+# exact skill-lib source commit recorded in .agents/skills/README.md.
 
 on:
   pull_request:
@@ -12,15 +15,43 @@ on:
 permissions:
   contents: read
 
+env:
+  SKILL_LIB_SHA: 5c46d0534fa0726a9078f0a242c66a217fbaa501
+
 jobs:
   manifest:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.11'
       - name: Vendored generate.py matches skill-lib (no local fork)
         run: cd .agents/skills/manifest && sha256sum -c generate.py.sha256
       - name: Check CLAUDE.md manifest block is in sync
         run: python .agents/skills/manifest/generate.py --root . --check
+
+  skill-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out PCEA
+        uses: actions/checkout@v7
+        with:
+          path: pcea
+      - name: Check out exact canonical skill-lib snapshot
+        uses: actions/checkout@v7
+        with:
+          repository: The-Interdependency/skill-lib
+          ref: ${{ env.SKILL_LIB_SHA }}
+          path: skill-lib
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+      - name: Verify vendored canonical skills and source citation
+        run: |
+          python skill-lib/tools/check_consumer_drift.py pcea \
+            --canon-root skill-lib \
+            --sha "$SKILL_LIB_SHA" \
+            --strict-sha \
+            --require-vendored
