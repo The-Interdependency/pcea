@@ -1,0 +1,204 @@
+{
+  "F0": {
+    "baseline_commit": "ecf2ca0dec38bef29382e02121b0edde66763aa9",
+    "baseline_receipt_path": "pcea-ucns/arity/BASELINE_FREEZE_V1.json",
+    "baseline_receipt_sha256": "f4644de3a3310990fb51ddab4e2e654171eeff246fc0601e097fbf07f68b5126",
+    "baseline_tree": "48900a7f554baae697e202acef0c87eb10d9564c",
+    "frozen_runtime_paths": {
+      "pcea/__init__.py": "5cbfde93cb40d99b4c531ef45286a07280478fb9",
+      "pcea/cipher.py": "41244f3dc567b0024d06a7ab8450e986668f9384",
+      "pcea/codec.py": "99ba31dbdb2a9979210bff738a714bf725a53ab7",
+      "pcea/contract.py": "cb2239e18765e0a59e51742e77ac4c424ccc1b1e",
+      "pcea/instance.py": "4ea1835d4bfcb14264d05133cf3c8b755d0def30",
+      "pcea/kdf.py": "87c763908d6571ca9dfcc4a5259b0b5f0acde182",
+      "pcea/primes.py": "e4ca26419c1ce0f61b1ae9bccb5707628c8fd446"
+    }
+  },
+  "F1": {
+    "allowed_paths": [
+      "pcea-ucns/arity/**",
+      "tests/test_arity_*.py"
+    ],
+    "candidate_commit": "PENDING_F1_SHA_UNTIL_CANDIDATE_COMMIT",
+    "candidate_commit_rule": "Initial freeze may use PENDING until immediate metadata-only correction records the F1 commit SHA."
+  },
+  "artifact_receipts": {
+    "current_dependency_graph_json_sha256": "80cbfd47585ef02f1ec12ce91a9c3765a629ad01cc2bb66d36b8ba0e7029fcf4",
+    "fixtures_json_sha256": "3bcc2a7eae3af02bb1626bdd175bdeb5f7478acf37642c6f846949d3763d7f86"
+  },
+  "candidate_adapters": {
+    "PCEA-A2": {
+      "contributors": [
+        "circle+0",
+        "circle-3"
+      ],
+      "notes": "A3 matches runtime PCEA; other arities are research-only adapter variants.",
+      "variant": "pcea"
+    },
+    "PCEA-A3": {
+      "contributors": [
+        "circle+0",
+        "circle-3",
+        "circle+3"
+      ],
+      "notes": "A3 matches runtime PCEA; other arities are research-only adapter variants.",
+      "variant": "pcea"
+    },
+    "PCEA-A5": {
+      "contributors": [
+        "circle+0",
+        "circle-3",
+        "circle+3",
+        "circle-1",
+        "circle+1"
+      ],
+      "notes": "A3 matches runtime PCEA; other arities are research-only adapter variants.",
+      "variant": "pcea"
+    },
+    "PCEA-A7": {
+      "contributors": [
+        "circle+0",
+        "circle-3",
+        "circle+3",
+        "circle-1",
+        "circle+1",
+        "circle-2",
+        "circle+2"
+      ],
+      "notes": "A3 matches runtime PCEA; other arities are research-only adapter variants.",
+      "variant": "pcea"
+    }
+  },
+  "claim_rule": "No structural or attack survival result is a cryptographic security claim.",
+  "environment": {
+    "platform": "Linux-6.17.0-1022-gcp-x86_64-with-glibc2.39",
+    "python_version": "3.12.3"
+  },
+  "escalation_rules": {
+    "phase2": "authorized only when H_STRUCT == SURVIVED_STRUCTURAL_ARITY and H_PCEA == SURVIVED_PCEA_SPECIFIC_ARITY",
+    "phase3": "authorized only when H_STRUCT == SURVIVED_STRUCTURAL_ARITY and H_PCEA == SURVIVED_PCEA_SPECIFIC_ARITY"
+  },
+  "fixture_generator_version": "candidate.py:fixtures-v1",
+  "hmmm": [
+    "Boolean ANF full-degree residual is one exact operationalization of direct arity, not a universal definition.",
+    "A PCEA-specific structural residual would still need an attack consequence before any hardness claim."
+  ],
+  "matched_controls": {
+    "PRF-A2": {
+      "contributors": [
+        "circle+0",
+        "circle-3"
+      ],
+      "domain": "same plaintext/address/output-width/base-p digit shift surface as PCEA adapter",
+      "hash": "HMAC-SHA256",
+      "variant": "prf"
+    },
+    "PRF-A3": {
+      "contributors": [
+        "circle+0",
+        "circle-3",
+        "circle+3"
+      ],
+      "domain": "same plaintext/address/output-width/base-p digit shift surface as PCEA adapter",
+      "hash": "HMAC-SHA256",
+      "variant": "prf"
+    },
+    "PRF-A5": {
+      "contributors": [
+        "circle+0",
+        "circle-3",
+        "circle+3",
+        "circle-1",
+        "circle+1"
+      ],
+      "domain": "same plaintext/address/output-width/base-p digit shift surface as PCEA adapter",
+      "hash": "HMAC-SHA256",
+      "variant": "prf"
+    },
+    "PRF-A7": {
+      "contributors": [
+        "circle+0",
+        "circle-3",
+        "circle+3",
+        "circle-1",
+        "circle+1",
+        "circle-2",
+        "circle+2"
+      ],
+      "domain": "same plaintext/address/output-width/base-p digit shift surface as PCEA adapter",
+      "hash": "HMAC-SHA256",
+      "variant": "prf"
+    }
+  },
+  "metrics": [
+    "maximum_algebraic_degree",
+    "full_degree_output_bits",
+    "output_bits_examined",
+    "full_degree_fraction",
+    "mismatches_after_deleting_degree_n",
+    "mismatch_fraction"
+  ],
+  "outcome_label_vocabulary": {
+    "H_HARD": [
+      "FALSIFIED_ARITY_HARDNESS_BENEFIT",
+      "SURVIVED_CURRENT_HARNESS",
+      "UNRESOLVED"
+    ],
+    "H_PCEA": [
+      "FALSIFIED_PCEA_SPECIFIC_ARITY",
+      "SURVIVED_PCEA_SPECIFIC_ARITY",
+      "UNRESOLVED"
+    ],
+    "H_STRUCT": [
+      "BLOCKED",
+      "FALSIFIED_STRUCTURAL_ARITY",
+      "SURVIVED_STRUCTURAL_ARITY"
+    ]
+  },
+  "parameters": {
+    "arities": [
+      2,
+      3,
+      5,
+      7
+    ],
+    "non_contributor_value": 0,
+    "offsets": [
+      0,
+      -3,
+      3,
+      -1,
+      1,
+      -2,
+      2
+    ],
+    "plaintext_values": [
+      0,
+      1,
+      -1,
+      2,
+      127
+    ],
+    "secret_bits": [
+      8,
+      12
+    ],
+    "secret_trials": 16,
+    "seed_index": 0,
+    "target_circle": 0,
+    "target_tensor": 0,
+    "word_bits": 8
+  },
+  "pcea_specific_equality_rules": [
+    "Descriptive count/fraction differences alone are not material separation.",
+    "For A5/A7, PCEA-specific separation requires PCEA full-degree presence when the matched PRF lacks it, or PCEA maximum degree at least two above the matched PRF.",
+    "If PCEA and matched PRF both show full-degree presence for a high arity, the shared behavior is not classified as PCEA-specific."
+  ],
+  "repository": "The-Interdependency/pcea",
+  "research_code": {
+    "candidate_py_sha256": "52e65fea3edade11d776a08fef71a109265837d8052a76d08fa801a0e6f49d56",
+    "structural_py_sha256": "068dc06fe06aa409c8f2cd4577517c881eb0f28eabf3b1d0fa012d674ef3f967"
+  },
+  "schema": "pcea-arity-freeze-v1",
+  "status": "F1_CANDIDATE_FREEZE_PRE_EXECUTION"
+}
