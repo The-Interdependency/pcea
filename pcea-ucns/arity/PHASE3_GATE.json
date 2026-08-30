@@ -1,0 +1,9 @@
+{
+  "F0_baseline_commit": "ecf2ca0dec38bef29382e02121b0edde66763aa9",
+  "F1_candidate_commit": "e5fb94defae29a4c1b6d3e796763d575b34e4c08",
+  "authorized": false,
+  "criterion": "authorized only when H_STRUCT == SURVIVED_STRUCTURAL_ARITY and H_PCEA == SURVIVED_PCEA_SPECIFIC_ARITY",
+  "freeze_json_sha256": "4960e5960add2cd43ba2749fe8bedf5f8f2a5ccf70dd041ded5f0c13b572c16c",
+  "issuer": "Actor A / Codex",
+  "schema": "pcea-arity-phase3-gate-v1"
+}
