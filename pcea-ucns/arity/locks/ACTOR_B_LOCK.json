@@ -1,0 +1,41 @@
+{
+  "schema": "pcea-arity-actor-lock-v1",
+  "actor": "DeepSeek",
+  "role": "B",
+  "F0": {
+    "baseline_commit": "ecf2ca0dec38bef29382e02121b0edde66763aa9",
+    "BASELINE_FREEZE_V1_json_sha256": "f4644de3a3310990fb51ddab4e2e654171eeff246fc0601e097fbf07f68b5126"
+  },
+  "F1": {
+    "candidate_commit": "e5fb94defae29a4c1b6d3e796763d575b34e4c08",
+    "freeze_json_sha256_corrected_receipt": "4960e5960add2cd43ba2749fe8bedf5f8f2a5ccf70dd041ded5f0c13b572c16c",
+    "freeze_json_sha256_at_f1_commit": "ba2188fe84d3cdf306b23406549a9756343c1647e126dacca3f1a812bbbf9f84"
+  },
+  "actor_result_commit": "0f482dc06944b9b9fdc29feaa18b2b1dea6c5460",
+  "artifact_hashes": {
+    "pcea-ucns/arity/replay_results_B.json": "7e6a71157a1101be3bed4906d750e7815a6d0bd183d82fb7846a7da42bbc024e",
+    "pcea-ucns/arity/REPORT_B.md": "ae0e9f1a6d6c343025afa5d1b261dd0cdec093f71f2f3850efed40e89e9b7fdd"
+  },
+  "phase_reached": "PHASE1_EXACT_STRUCTURAL_MICROSCOPE",
+  "preregistered_outcome_labels": {
+    "H_STRUCT": "SURVIVED_STRUCTURAL_ARITY",
+    "H_PCEA": "FALSIFIED_PCEA_SPECIFIC_ARITY",
+    "H_HARD": "UNRESOLVED"
+  },
+  "phase2_authorized": false,
+  "phase3_gate_authorized": false,
+  "full_suite_result": "136 passed, 2 skipped (PYTHONPATH=. python -m pytest -q)",
+  "independence_declaration": false,
+  "deviation_or_contamination": [
+    "Actor A result artifacts REPORT_A.md (outcome labels and metrics table) and locks/ACTOR_A_LOCK.json (preregistered_outcome_labels) were read by this agent before taking the Actor B role, during discovery of the run. Actor A implementation files candidate.py and structural.py and structural_results_A.json were NOT opened. The coordinator must weigh this contamination in adjudication.",
+    "The on-disk freeze.json at the F1 commit carries candidate_commit=PENDING_F1_SHA_UNTIL_CANDIDATE_COMMIT; the corrected receipt (4960e596...) from the metadata-only correction commit is recorded above as the F1 freeze identity.",
+    "Pre-existing ratio drift at the F1 tree in Actor A files pcea-ucns/arity/candidate.py and pcea-ucns/arity/structural.py was observed via ratios_check.py --root . --strict but not modified.",
+    "Actor B used the existing pcea venv Python 3.12.3 (/home/wayseer_interdependentway_org/.venvs/pcea/bin/python), matching the freeze environment."
+  ],
+  "hmmm": [
+    "Boolean ANF full-degree residual is one exact operationalization of direct arity, not a universal definition.",
+    "The PRF control reconstruction is Actor B's documented interpretation of the frozen protocol text; a different frozen-compatible reading could shift exact full-degree bit counts.",
+    "A PCEA-specific structural residual would still need a cryptanalytic consequence before any hardness claim.",
+    "Contaminated independence limits this replay's separate-error-surface value."
+  ]
+}
