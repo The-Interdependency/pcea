@@ -35,6 +35,8 @@ repository: The-Interdependency/pcea
 baseline_commit: f69ca59a278f81c9b2df80d7cb8053ca1cb8c5f5
 ```
 
+`baseline_commit` is intentionally earlier than the commit that added this procedure. Later documentation commits do not change the frozen transform. The experiment is defined against the baseline code objects below, not against whatever `HEAD` happens to be when Codex starts.
+
 The following baseline source objects are frozen for this experiment and MUST NOT be edited by the implementing actor:
 
 ```text
