@@ -99,11 +99,32 @@ inspect Actor B/C output
 
 Follow the frozen escalation rule for Phase 2/3. Preflight compute before a phase; once a healthy phase starts, let it complete naturally.
 
+After the preregistered structural/PCEA-specific gate is decided, emit an **outcome-blind gate token** for Actor C:
+
+```text
+pcea-ucns/arity/PHASE3_GATE.json
+```
+
+It contains only:
+
+```text
+schema = pcea-arity-phase3-gate-v1
+F0 baseline SHA
+F1 candidate SHA
+freeze.json SHA256
+authorized = true | false
+criterion = frozen Phase-3 escalation rule
+issuer = Actor A / Codex
+```
+
+Do not put structural metrics, effect sizes, outcome labels, interpretation, or report excerpts in this token. Actor C may learn only whether the preregistered reduced-entropy scaling gate opened.
+
 Emit only reached artifacts:
 
 ```text
 structural_results_A.json
 attack_results_A.json        # only if authorized/reached
+PHASE3_GATE.json
 REPORT_A.md
 locks/ACTOR_A_LOCK.json
 ```
@@ -115,6 +136,7 @@ actor = Codex
 role = A
 F0 baseline SHA + BASELINE_FREEZE_V1.json SHA256
 F1 SHA + freeze.json SHA256
+PHASE3_GATE.json SHA256
 result commit SHA
 artifact path -> SHA256
 preregistered outcome labels
@@ -145,6 +167,7 @@ F1 candidate-freeze SHA
 F1 freeze.json SHA256
 Actor A result SHA
 Actor A lock SHA256
+PHASE3_GATE authorized status + SHA256
 Phase reached
 Outcome labels
 Full-suite result
