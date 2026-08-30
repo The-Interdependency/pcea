@@ -97,6 +97,13 @@ security mechanism, execute `ARITY_FREEZE_AND_TEST.md`. Its first phase is the
 minimal decisive test: prove or falsify a direct higher-order structural
 residual under exact lower-arity partitioning and matched PRF controls.
 
+Use multiple actors only after the freeze. The preferred sequence is: Codex
+builds the preregistered harness; a second actor independently reimplements the
+exact structural calculation without importing Codex's analysis functions; a
+third actor attacks the frozen candidate; an adjudicator compares frozen
+result hashes afterward. Parallel co-authoring of one harness does not count as
+independent replay.
+
 ## How to use it
 
 Run the whole repository:
