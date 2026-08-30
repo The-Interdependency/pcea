@@ -46,6 +46,14 @@ PCEA transform and speculative UCNS-native key establishment.
    It remains a proving-ground prototype pending harder attacks and independent
    cryptographic review.
 
+7. **Preregister direct-arity falsification before changing the cipher.**
+   `ARITY_FREEZE_AND_TEST.md` freezes the current transform, classifies the
+   existing contributor relation as an A3 baseline to be verified, defines
+   A2/A3/A5/A7 research variants, matched PRF controls, exact lower-arity
+   partition tests, bounded reduced-entropy attack escalation, and an
+   independent multi-actor replay protocol. It must be executed without
+   modifying runtime PCEA.
+
 ## What it cannot honestly do yet
 
 - It cannot claim PCEA-UCNS is secure public-key encryption.
@@ -55,6 +63,8 @@ PCEA transform and speculative UCNS-native key establishment.
   session-management attack work.
 - It cannot replace nonce/session design, persistence/rollback design,
   resynchronization, or key-management requirements for a production channel.
+- It cannot claim seven-circle topology is heptadic cryptographic arity until
+  the frozen arity procedure earns that distinction.
 - It cannot ship a UCNS-KEM while the current documents mark the native UCNS
   key-establishment line as blocked or open.
 
@@ -68,6 +78,7 @@ PCEA transform and speculative UCNS-native key establishment.
 | Structural readout breaks | `prefix_read_break.py`, `attack1_minkowski_break.py` | Look for direct reconstruction or algebraic inversion that bypasses key-space search | Negative gates: tested candidate families break |
 | Gonal/state communication | `gonal_architecture.py` | Explore PCEA-advanced private gonal rotation for state/token communication | Experimental; further bridge/attack gates remain |
 | Provisioned authenticated session | `ratcheted_session.py` | Exercise ratcheting, directional key separation, transcript authentication, strict sequencing, and rollback-safe receive state around PCEA | Prototype harness survives its current regression set; not runtime or a security certification |
+| Arity freeze/test | `ARITY_FREEZE_AND_TEST.md` | Determine actual direct state-key arity, exact higher-order residuals, PCEA-vs-PRF separation, and only then attack scaling | Preregistered; no result yet |
 | Candidate ledger | `candidate-ledger.json` | Track every UCNS-assisted PCEA candidate, its claim, public/private material, known attacks, harnesses, status, and next attack | Process guardrail; not a security proof |
 | Option D one-way-map gate | `one_way_map_gate.py` | Reject UCNS-native one-way-map sketches that lack quotient, prefix, set-basis, catalogue, enumeration, MITM, active, correctness, and scaling attack coverage | Attack-agenda gate; not a security proof |
 | Fed Option D UCNS map | `option_d_ucns_map.py` | Feed a face/payload spectrum projection into the Option D gate as the next concrete map to attack | Spec-level candidate; no security claim |
@@ -80,6 +91,11 @@ session specifically, the next boundary is adversarial: truncation, session-id
 reuse, state-compromise/forward-secrecy limits, persistent rollback, concurrent
 senders, and resynchronization behavior must be attacked before any runtime
 promotion is considered.
+
+Before any independent cryptographic review treats seven-circle structure as a
+security mechanism, execute `ARITY_FREEZE_AND_TEST.md`. Its first phase is the
+minimal decisive test: prove or falsify a direct higher-order structural
+residual under exact lower-arity partitioning and matched PRF controls.
 
 ## How to use it
 
@@ -104,6 +120,16 @@ python -m pytest -q tests/test_ratcheted_session.py
 The prototype is loaded as a proving-ground file rather than imported from the
 `pcea` package. Use it to attack the session design and preserve the runtime
 boundary; do not treat it as a production API.
+
+Prepare the arity run by reading the complete preregistration before changing
+any experimental code:
+
+```bash
+cat pcea-ucns/ARITY_FREEZE_AND_TEST.md
+```
+
+The Codex handoff is embedded in that document. It begins with Phase 0 and
+Phase 1 only and may escalate only according to the frozen outcome rules.
 
 Run the broader UCNS proving-ground tests:
 
