@@ -1,4 +1,4 @@
-# ratios: loc_comments=105:30 imports_exports=10:3 calls_definitions=33:6
+# ratios: loc_comments=116:30 imports_exports=10:3 calls_definitions=38:6
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Quotient-based attack for PCEA-UCNS — and the key-space reconciliation.
@@ -37,18 +37,31 @@ from __future__ import annotations
 
 import random
 import statistics
+import sys
 from fractions import Fraction
 from math import lcm
+from pathlib import Path
 from typing import List, Tuple
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ucns_compat import import_ucns_module  # noqa: E402
+
 try:
-    from ucns_recursive.canonical import UCNSObject, multiply
-    from ucns_recursive.factor_search_v08 import SEQ_PRIME, factor_search_v08
-    from ucns_recursive.left_quotient import left_quotient
+    _canonical = import_ucns_module("canonical")
+    _factor_search = import_ucns_module("factor_search_v08")
+    _left_quotient = import_ucns_module("left_quotient")
+
+    UCNSObject = _canonical.UCNSObject
+    multiply = _canonical.multiply
+    SEQ_PRIME = _factor_search.SEQ_PRIME
+    factor_search_v08 = _factor_search.factor_search_v08
+    left_quotient = _left_quotient.left_quotient
 
     UCNS_AVAILABLE = True
-except ImportError:  # pragma: no cover
+    UCNS_IMPORT_ERROR = ""
+except ImportError as exc:  # pragma: no cover
     UCNS_AVAILABLE = False
+    UCNS_IMPORT_ERROR = str(exc)
 
 
 def _mk(angles: List[Fraction], faces: List[int]) -> "UCNSObject":
@@ -156,7 +169,7 @@ if __name__ == "__main__":
 
     rep = run_all()
     if not rep["available"]:
-        print("ucns not installed; quotient attack skipped.")
+        print(f"recursive UCNS API unavailable; quotient attack skipped: {UCNS_IMPORT_ERROR}")
     else:
         print(json.dumps(rep, indent=2))
-# ratios: loc_comments=105:30 imports_exports=10:3 calls_definitions=33:6
+# ratios: loc_comments=116:30 imports_exports=10:3 calls_definitions=38:6

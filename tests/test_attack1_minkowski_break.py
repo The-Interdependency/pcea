@@ -1,4 +1,4 @@
-# ratios: loc_comments=20:9 imports_exports=3:2 calls_definitions=8:2
+# ratios: loc_comments=21:9 imports_exports=3:2 calls_definitions=9:2
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Tests for Open Attack 1 — the Minkowski set-basis break.
@@ -21,7 +21,8 @@ mb = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(mb)
 
 pytestmark = pytest.mark.skipif(
-    not mb.UCNS_AVAILABLE, reason="ucns not installed; Attack 1 inert"
+    not mb.UCNS_AVAILABLE,
+    reason=getattr(mb, "UCNS_IMPORT_ERROR", "recursive UCNS API unavailable"),
 )
 
 
@@ -37,4 +38,4 @@ def test_attack_cost_beats_brute_at_scale():
     small = mb.attack_cost([8, 5], trials=20)
     large = mb.attack_cost([16, 9, 7, 11, 13], trials=20)
     assert large["speedup"] >= small["speedup"]
-# ratios: loc_comments=20:9 imports_exports=3:2 calls_definitions=8:2
+# ratios: loc_comments=21:9 imports_exports=3:2 calls_definitions=9:2

@@ -30,7 +30,7 @@ encrypt: e_j = (v_j + k_j) mod p
 decrypt: v_j = (e_j - k_j) mod p
 ```
 
-Fixed-width base-`p` encoding prevents output digit count from revealing the original value's magnitude class. The Möbius disk mapping lets positive and negative values share one fixed-width unsigned space; `word_bits` must be large enough for the caller's value range and must match between sender and receiver.
+Fixed-width base-`p` encoding prevents output digit count from revealing the original value's magnitude class. The Möbius disk mapping lets positive and negative values share one fixed-width unsigned space; `word_bits` must be large enough for the caller's signed value range and must match between sender and receiver. Values outside `[-2^(word_bits-1), 2^(word_bits-1)-1]` raise `ValueError` rather than silently wrapping.
 
 ## Usage
 
@@ -68,7 +68,7 @@ The `pcea-ucns/` directory is different: it is an attack-and-feasibility workspa
 Important testing boundaries:
 
 - PCEA runtime tests run without `ucns` and cover round trips, key-state mismatch behavior, fixed-width codec behavior, KDF determinism/sensitivity, and state advancement.
-- PCEA-UCNS tests are attack/regression harnesses. They are skipped when `ucns` is not installed, keeping the symmetric runtime testable without UCNS.
+- PCEA-UCNS tests are attack/regression harnesses. They are skipped when the recursive UCNS API is unavailable, keeping the symmetric runtime testable without UCNS.
 - Passing a PCEA-UCNS harness means only that the measured behavior has not drifted; it is not a proof of cryptographic security.
 - Several PCEA-UCNS harnesses intentionally pin breaks or negative findings, including oracle-domain factorization, positional/factor-count attacks, prefix-read reconstruction, and Minkowski set-basis recovery.
 - The gonal architecture tests include a measured PCEA-advanced candidate that resists simple frequency/known-plaintext probes in the harness, but the module still marks further attacks and the 53→32 bridge as gates before any shipped `gonal_cipher.py`.
@@ -79,6 +79,7 @@ Useful commands:
 python -m pytest -q
 python -m pytest -q tests/test_cipher.py tests/test_codec.py tests/test_kdf.py tests/test_instance.py tests/test_contract_spec.py
 python -m pytest -q tests/test_attack_harness.py tests/test_positional_attack.py tests/test_quotient_attack.py tests/test_prefix_read_break.py tests/test_projection_action_candidate.py tests/test_pruning_scaling.py tests/test_attack1_minkowski_break.py tests/test_three_factor_attack.py tests/test_factor_count_sweep.py tests/test_gonal_architecture.py
+PCEA_UCNS_EXPENSIVE=1 python -m pytest -q tests/test_three_factor_attack.py tests/test_factor_count_sweep.py
 ```
 
 ## PCEA ↔ UCNS Boundary (v0 contract decision)

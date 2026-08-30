@@ -1,4 +1,4 @@
-# ratios: loc_comments=20:13 imports_exports=3:2 calls_definitions=8:2
+# ratios: loc_comments=21:13 imports_exports=3:2 calls_definitions=9:2
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Tests for the quotient-guided pruning scaling result.
@@ -21,7 +21,8 @@ ps = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(ps)
 
 pytestmark = pytest.mark.skipif(
-    not ps.UCNS_AVAILABLE, reason="ucns not installed; scaling test inert"
+    not ps.UCNS_AVAILABLE,
+    reason=getattr(ps, "UCNS_IMPORT_ERROR", "recursive UCNS API unavailable"),
 )
 
 
@@ -41,4 +42,4 @@ def test_strong_prune_attack_is_not_polynomial_break():
     # The cipher's own carrier-support pruning, turned adversarial, still
     # does not shrink the search below linear.
     assert r["slope"] > 0.8
-# ratios: loc_comments=20:13 imports_exports=3:2 calls_definitions=8:2
+# ratios: loc_comments=21:13 imports_exports=3:2 calls_definitions=9:2

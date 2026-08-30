@@ -1,4 +1,4 @@
-# ratios: loc_comments=113:28 imports_exports=8:3 calls_definitions=26:8
+# ratios: loc_comments=133:30 imports_exports=10:3 calls_definitions=32:8
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Factor-count sweep + non-uniqueness diagnosis for PCEA-UCNS.
@@ -11,9 +11,11 @@ underlying cause.
 
 Two measurements at fixed carrier 40 (⟨2,5⟩):
 
-- DECAY: recursive-peel recovery of the designated private factor as
+- DECAY, opt-in: recursive-peel recovery of the designated private factor as
   factor count runs 2..6. Measured FLAT (~40-67%, noise, no downward
-  trend). More factors do not help.
+  trend). More factors do not help. The current recursive UCNS API performs
+  exhaustive Fraction-heavy search for this probe, so the full historical
+  sweep is not part of quick/default runs.
 
 - NON-UNIQUENESS (the cause): for a 5-factor product, how often does the
   search's split equal the TRUE ordered (prefix, C) versus some OTHER
@@ -27,23 +29,36 @@ must also accept (broken), or the protocol demands the exact private
 decomposition and honest parties cannot reliably agree (non-functional).
 This is a structural barrier, not a parameter-tuning problem.
 
-MEASURE, not assert. Skipped without ucns.
+MEASURE, not assert. Skipped without recursive UCNS APIs.
 """
 
 from __future__ import annotations
 
+import os
 import random
+import sys
 from fractions import Fraction
 from math import lcm
+from pathlib import Path
 from typing import List, Tuple
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ucns_compat import import_ucns_module  # noqa: E402
+
 try:
-    from ucns_recursive.canonical import UCNSObject, multiply
-    from ucns_recursive.factor_search_v08 import SEQ_PRIME, factor_search_v08
+    _canonical = import_ucns_module("canonical")
+    _factor_search = import_ucns_module("factor_search_v08")
+
+    UCNSObject = _canonical.UCNSObject
+    multiply = _canonical.multiply
+    SEQ_PRIME = _factor_search.SEQ_PRIME
+    factor_search_v08 = _factor_search.factor_search_v08
 
     UCNS_AVAILABLE = True
-except ImportError:  # pragma: no cover
+    UCNS_IMPORT_ERROR = ""
+except ImportError as exc:  # pragma: no cover
     UCNS_AVAILABLE = False
+    UCNS_IMPORT_ERROR = str(exc)
 
 
 def _mk(angles: List[Fraction], faces: List[int]) -> "UCNSObject":
@@ -151,22 +166,33 @@ def nonuniqueness(
     }
 
 
-def run_all() -> dict:
+FULL_DECAY_REQUIRES = (
+    "Run with PCEA_UCNS_EXPENSIVE=1 or call "
+    "decay_sweep([8, 5], 2, counts=(2, 3, 4, 5, 6), trials=60) "
+    "to refresh the historical full recursive-peel decay measurement."
+)
+
+
+def run_all(include_decay: bool = False) -> dict:
     if not UCNS_AVAILABLE:
         return {"available": False}
-    return {
+    report = {
         "available": True,
-        "decay": decay_sweep([8, 5], 2),
-        "nonuniqueness": nonuniqueness([8, 5], 2),
+        "nonuniqueness": nonuniqueness([8, 5], 2, nfac=5, trials=20),
+        "requires_more": FULL_DECAY_REQUIRES,
     }
+    if include_decay:
+        report["decay"] = decay_sweep([8, 5], 2)
+        report.pop("requires_more", None)
+    return report
 
 
 if __name__ == "__main__":
     import json
 
-    rep = run_all()
+    rep = run_all(include_decay=os.environ.get("PCEA_UCNS_EXPENSIVE") == "1")
     if not rep["available"]:
-        print("ucns not installed; sweep skipped.")
+        print(f"recursive UCNS API unavailable; sweep skipped: {UCNS_IMPORT_ERROR}")
     else:
         print(json.dumps(rep, indent=2))
-# ratios: loc_comments=113:28 imports_exports=8:3 calls_definitions=26:8
+# ratios: loc_comments=133:30 imports_exports=10:3 calls_definitions=32:8

@@ -1,4 +1,4 @@
-# ratios: loc_comments=18:7 imports_exports=3:2 calls_definitions=7:2
+# ratios: loc_comments=19:7 imports_exports=3:2 calls_definitions=8:2
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Tests for the prefix-read structural break.
@@ -21,7 +21,8 @@ prb = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(prb)
 
 pytestmark = pytest.mark.skipif(
-    not prb.UCNS_AVAILABLE, reason="ucns not installed; prefix-read break inert"
+    not prb.UCNS_AVAILABLE,
+    reason=getattr(prb, "UCNS_IMPORT_ERROR", "recursive UCNS API unavailable"),
 )
 
 
@@ -33,4 +34,4 @@ def test_flat_objects_are_reconstructed_without_search():
 def test_payload_nesting_does_not_block_the_break():
     r = prb.prefix_read_break(depth=1, trials=60)
     assert r["rate"] > 0.95
-# ratios: loc_comments=18:7 imports_exports=3:2 calls_definitions=7:2
+# ratios: loc_comments=19:7 imports_exports=3:2 calls_definitions=8:2

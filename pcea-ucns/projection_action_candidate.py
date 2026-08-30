@@ -1,4 +1,4 @@
-# ratios: loc_comments=75:57 imports_exports=10:5 calls_definitions=33:10
+# ratios: loc_comments=84:57 imports_exports=11:5 calls_definitions=37:10
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Candidate one-way UCNS action via lossy set-projection — and its open attacks.
@@ -69,17 +69,28 @@ from __future__ import annotations
 import itertools
 import math
 import random
+import sys
 from fractions import Fraction
 from math import lcm
+from pathlib import Path
 from typing import List, Tuple
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ucns_compat import import_ucns_module  # noqa: E402
+
 try:
-    from ucns_recursive.canonical import UCNSObject, multiply
-    from ucns_recursive.left_quotient import right_quotient
+    _canonical = import_ucns_module("canonical")
+    _left_quotient = import_ucns_module("left_quotient")
+
+    UCNSObject = _canonical.UCNSObject
+    multiply = _canonical.multiply
+    right_quotient = _left_quotient.right_quotient
 
     UCNS_AVAILABLE = True
-except ImportError:  # pragma: no cover
+    UCNS_IMPORT_ERROR = ""
+except ImportError as exc:  # pragma: no cover
     UCNS_AVAILABLE = False
+    UCNS_IMPORT_ERROR = str(exc)
 
 
 def _mk(angles: List[Fraction]) -> "UCNSObject":
@@ -166,6 +177,6 @@ if __name__ == "__main__":
     import json
 
     rep = run_all()
-    print("ucns not installed; candidate probe skipped." if not rep["available"]
+    print(f"recursive UCNS API unavailable; candidate probe skipped: {UCNS_IMPORT_ERROR}" if not rep["available"]
           else json.dumps(rep, indent=2))
-# ratios: loc_comments=75:57 imports_exports=10:5 calls_definitions=33:10
+# ratios: loc_comments=84:57 imports_exports=11:5 calls_definitions=37:10

@@ -65,7 +65,10 @@ private-factor boundary. Yet recursive peeling still recovers C ~49%.
 
 ### 5. Factor count is irrelevant; non-uniqueness looked fatal
 
-Recovery does not decay with factor count (2..6 factors: ~40–67%, flat).
+Historical runs found that recovery does not decay with factor count
+(2..6 factors: ~40-67%, flat). The full recursive-peel refresh is now
+opt-in with `PCEA_UCNS_EXPENSIVE=1` because the legacy recursive UCNS solver
+uses exhaustive Fraction-heavy search for this probe.
 For a 5-factor product the search finds the true ordered (prefix, C) split
 0/80 and some other valid decomposition 80/80 — **the public product has
 many ordered factorizations.** This appeared to defeat any KEM: bind the

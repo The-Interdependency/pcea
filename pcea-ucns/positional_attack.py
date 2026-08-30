@@ -1,4 +1,4 @@
-# ratios: loc_comments=68:26 imports_exports=8:2 calls_definitions=18:4
+# ratios: loc_comments=78:26 imports_exports=9:2 calls_definitions=22:4
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Positional attack harness for PCEA-UCNS Q1.
@@ -26,17 +26,29 @@ secure; a domain that falls IS thereby refuted as a key location.
 from __future__ import annotations
 
 import random
+import sys
 from fractions import Fraction
 from math import lcm
+from pathlib import Path
 from typing import List
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ucns_compat import import_ucns_module  # noqa: E402
+
 try:
-    from ucns_recursive.canonical import UCNSObject, multiply
-    from ucns_recursive.factor_search_v08 import SEQ_PRIME, factor_search_v08
+    _canonical = import_ucns_module("canonical")
+    _factor_search = import_ucns_module("factor_search_v08")
+
+    UCNSObject = _canonical.UCNSObject
+    multiply = _canonical.multiply
+    SEQ_PRIME = _factor_search.SEQ_PRIME
+    factor_search_v08 = _factor_search.factor_search_v08
 
     UCNS_AVAILABLE = True
-except ImportError:  # pragma: no cover
+    UCNS_IMPORT_ERROR = ""
+except ImportError as exc:  # pragma: no cover
     UCNS_AVAILABLE = False
+    UCNS_IMPORT_ERROR = str(exc)
 
 
 def _mk(angles: List[Fraction], faces: List[int]) -> "UCNSObject":
@@ -110,7 +122,7 @@ if __name__ == "__main__":
 
     rep = run_all()
     if not rep["available"]:
-        print("ucns not installed; positional harness skipped.")
+        print(f"recursive UCNS API unavailable; positional harness skipped: {UCNS_IMPORT_ERROR}")
     else:
         print(json.dumps(rep, indent=2))
-# ratios: loc_comments=68:26 imports_exports=8:2 calls_definitions=18:4
+# ratios: loc_comments=78:26 imports_exports=9:2 calls_definitions=22:4

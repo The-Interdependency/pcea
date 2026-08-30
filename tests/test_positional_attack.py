@@ -1,4 +1,4 @@
-# ratios: loc_comments=22:10 imports_exports=3:2 calls_definitions=8:2
+# ratios: loc_comments=23:10 imports_exports=3:2 calls_definitions=9:2
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Tests for the positional attack harness.
@@ -21,7 +21,8 @@ pa = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(pa)
 
 pytestmark = pytest.mark.skipif(
-    not pa.UCNS_AVAILABLE, reason="ucns not installed; positional harness inert"
+    not pa.UCNS_AVAILABLE,
+    reason=getattr(pa, "UCNS_IMPORT_ERROR", "recursive UCNS API unavailable"),
 )
 
 
@@ -40,4 +41,4 @@ def test_larger_carrier_does_not_help():
     small = pa.positional_recovery([3, 5], 3, trials=40)
     large = pa.positional_recovery([3, 5, 7], 5, trials=40)
     assert large["recompose_rate"] >= small["recompose_rate"] - 0.1
-# ratios: loc_comments=22:10 imports_exports=3:2 calls_definitions=8:2
+# ratios: loc_comments=23:10 imports_exports=3:2 calls_definitions=9:2

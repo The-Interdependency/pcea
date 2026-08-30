@@ -1,4 +1,4 @@
-# ratios: loc_comments=75:44 imports_exports=9:4 calls_definitions=34:7
+# ratios: loc_comments=83:44 imports_exports=11:4 calls_definitions=37:7
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Open Attack 1 resolved: the lossy-projection candidate is BROKEN.
@@ -54,17 +54,27 @@ from __future__ import annotations
 
 import random
 import statistics
+import sys
 from fractions import Fraction
 from itertools import combinations
 from math import lcm
+from pathlib import Path
 from typing import List, Set
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ucns_compat import import_ucns_module  # noqa: E402
+
 try:
-    from ucns_recursive.canonical import UCNSObject, multiply
+    _canonical = import_ucns_module("canonical")
+
+    UCNSObject = _canonical.UCNSObject
+    multiply = _canonical.multiply
 
     UCNS_AVAILABLE = True
-except ImportError:  # pragma: no cover
+    UCNS_IMPORT_ERROR = ""
+except ImportError as exc:  # pragma: no cover
     UCNS_AVAILABLE = False
+    UCNS_IMPORT_ERROR = str(exc)
 
 
 def _mk(angles: List[Fraction]) -> "UCNSObject":
@@ -145,6 +155,6 @@ if __name__ == "__main__":
     import json
 
     rep = run_all()
-    print("ucns not installed; Attack 1 skipped." if not rep["available"]
+    print(f"recursive UCNS API unavailable; Attack 1 skipped: {UCNS_IMPORT_ERROR}" if not rep["available"]
           else json.dumps(rep, indent=2))
-# ratios: loc_comments=75:44 imports_exports=9:4 calls_definitions=34:7
+# ratios: loc_comments=83:44 imports_exports=11:4 calls_definitions=37:7

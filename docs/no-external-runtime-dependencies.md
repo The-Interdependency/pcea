@@ -31,6 +31,10 @@ weakness; it is **not** in `RUNTIME_MODULES` and is never imported by the
 cipher. PCEA's symmetric core remains importable and testable with no
 ucns present (the harness tests skip cleanly in that case).
 
+`pcea-ucns/` is intentionally a source-tree proving ground. It is excluded
+from wheel package discovery so installing `pcea` exposes only the runtime
+`pcea` package.
+
 ## Exit gate (Phase 0)
 
 - Repository metadata shows no runtime pip dependencies

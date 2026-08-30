@@ -1,4 +1,4 @@
-# ratios: loc_comments=22:9 imports_exports=3:3 calls_definitions=8:3
+# ratios: loc_comments=23:9 imports_exports=3:3 calls_definitions=9:3
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Tests for the projection-action candidate.
@@ -22,7 +22,8 @@ pac = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(pac)
 
 pytestmark = pytest.mark.skipif(
-    not pac.UCNS_AVAILABLE, reason="ucns not installed; candidate probe inert"
+    not pac.UCNS_AVAILABLE,
+    reason=getattr(pac, "UCNS_IMPORT_ERROR", "recursive UCNS API unavailable"),
 )
 
 
@@ -41,4 +42,4 @@ def test_quotient_does_not_invert_projected_action():
 def test_honest_parties_agree():
     r = pac.honest_agreement([8, 5, 3, 7], width=3, trials=120)
     assert r["rate"] == 1.0
-# ratios: loc_comments=22:9 imports_exports=3:3 calls_definitions=8:3
+# ratios: loc_comments=23:9 imports_exports=3:3 calls_definitions=9:3

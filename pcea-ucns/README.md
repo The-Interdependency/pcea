@@ -87,11 +87,20 @@ Run the UCNS proving-ground tests:
 python -m pytest -q tests/test_attack_harness.py tests/test_positional_attack.py tests/test_quotient_attack.py tests/test_prefix_read_break.py tests/test_projection_action_candidate.py tests/test_pruning_scaling.py tests/test_attack1_minkowski_break.py tests/test_three_factor_attack.py tests/test_factor_count_sweep.py tests/test_gonal_architecture.py
 ```
 
-If `ucns` is not installed, UCNS-dependent tests skip by design. That skip is
-an environment limitation, not a positive result. To harvest real UCNS attack
-numbers, install the matching The Interdependency UCNS package/repository in
-the test environment, rerun the proving-ground tests, and update the measured
-figures only when the harness seeds and parameters are also recorded.
+If the recursive UCNS API is unavailable, UCNS-dependent tests skip by design.
+That skip is an environment limitation, not a positive result. To harvest real
+UCNS attack numbers, install the matching The Interdependency UCNS
+package/repository or provide the legacy `ucns_recursive` API in the test
+environment, rerun the proving-ground tests, and update the measured figures
+only when the harness seeds and parameters are also recorded.
+
+The full historical three-factor recursive-peel measurement and factor-count
+decay sweep are intentionally outside the default test cost. Run them
+explicitly when refreshing those measurements:
+
+```bash
+PCEA_UCNS_EXPENSIVE=1 python -m pytest -q tests/test_three_factor_attack.py tests/test_factor_count_sweep.py
+```
 
 ## Rule for adding a new candidate
 

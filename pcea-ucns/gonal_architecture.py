@@ -1,4 +1,4 @@
-# ratios: loc_comments=113:97 imports_exports=8:5 calls_definitions=56:7
+# ratios: loc_comments=128:97 imports_exports=7:5 calls_definitions=67:10
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Two-gonal architecture exploration: the energy-to-token quantizer, and why
@@ -40,8 +40,8 @@ The private gonal must ADVANCE per tick, driven by the PCEA this-state/
 last-state keystream — turning it polyalphabetic (a stream cipher over the
 token lattice). This is why PCEA and the gonal are ONE construction: PCEA
 is the keystream that rotates the gonal; the gonal is the quantizer the
-keystream drives. Neither is secure alone; together, measured against the
-REAL PCEA chain (interdependent_lib.pcea.cipher):
+keystream drives. Neither is secure alone; together, measured against this
+repo's real 7x7-seed PCEA chain:
 - Frequency analysis collapses to 3.0% (random baseline 3.1%).
 - Known-plaintext predicts held-out tokens at 1.8% (BELOW random — a known
   pair informs only one tick's alphabet, which never recurs).
@@ -84,12 +84,12 @@ ATTACK RESULTS (run; one gate remains)
      becomes viable as the stream grows (largest group 23 at 20k ticks,
      17% within-group recovery — not yet fatal, but asymptotically the
      Vigenere failure shape). FIX, demonstrated: a full-state keystream
-     consuming distinct 53-wide slices per tick gives 19657/20000 distinct
+     consuming distinct repo-native PCEA state slices per tick gives 19657/20000 distinct
      (38 reused, largest group 11). The harness now uses the full-state
      keystream; the weakness was scalarization, not the cipher.
-  3. The 53->32 dimension bridge: STILL THE GATE, and now load-bearing —
+  3. The PCEA-state -> 32-gonal dimension bridge: STILL THE GATE, and now load-bearing —
      it is not mere dimension-matching, it IS the Attack-2 fix. The bridge
-     from 53-wide PCEA state to gonal rotation must preserve the state
+     from PCEA state to gonal rotation must preserve the state
      entropy (the full-state slice above is a candidate, not a proven
      bridge). A real implementation must specify and attack this mapping
      before trust; the slice function here is illustrative.
@@ -111,13 +111,13 @@ from collections import Counter
 from typing import List, Tuple
 
 try:
-    import sys
-    sys.path.insert(0, "/home/claude/a0-betatest/backend")
-    from interdependent_lib.pcea.cipher import encrypt_state
+    from pcea.cipher import encrypt_state
 
     REAL_PCEA = True
-except Exception:  # pragma: no cover
+    PCEA_IMPORT_ERROR = ""
+except Exception as exc:  # pragma: no cover
     REAL_PCEA = False
+    PCEA_IMPORT_ERROR = str(exc)
 
 
 def make_gonal(n: int, phase: float, perm: List[int]) -> List[float]:
@@ -160,22 +160,43 @@ def static_gonal_frequency_break(n: int = 32, count: int = 5000, seed: int = 11)
     return {"recovery": recov, "count": count, "rate": recov / count, "random": 1 / n}
 
 
+def _bounded_word(value: int) -> int:
+    return int(value % 1_000_003) - 500_001
+
+
+def _seed_from_values(values: List[int], tick: int = 0) -> List[List[int]]:
+    if not values:
+        values = [1]
+    flat = [
+        _bounded_word(values[(i + tick) % len(values)] + tick * 104_729 + i * 8_191)
+        for i in range(49)
+    ]
+    return [flat[i:i + 7] for i in range(0, 49, 7)]
+
+
+def _flatten_state(state: List[List[List[int]]]) -> List[int]:
+    return [value for seed in state for circle in seed for value in circle]
+
+
 def _keystream(seed_state: List[int], ticks: int) -> List[int]:
     # Full-state keystream: consume DISTINCT state slices per tick so the
-    # 53-wide PCEA state's entropy reaches the rotation. A scalar sum(enc)
+    # repo-native PCEA state's entropy reaches the rotation. A scalar sum(enc)
     # collapses the keyspace and reintroduces alphabet reuse (see ATTACK 2).
-    last = list(seed_state)
+    last = [_seed_from_values(seed_state)]
+    state = [_seed_from_values([v * 3 + 17 for v in seed_state])]
     out = []
     for i in range(ticks):
-        enc = encrypt_state(last, last)
+        enc_state = encrypt_state(state, last)
+        enc = _flatten_state(enc_state)
         w = (
-            enc[i % 53]
-            + enc[(i * 7 + 3) % 53] * 257
-            + enc[(i * 13 + 5) % 53] * 65537
-            + enc[(i * 31 + 11) % 53] * 16777259
+            enc[i % len(enc)]
+            + enc[(i * 7 + 3) % len(enc)] * 257
+            + enc[(i * 13 + 5) % len(enc)] * 65537
+            + enc[(i * 31 + 11) % len(enc)] * 16777259
         )
         out.append(w % (10 ** 9))
-        last = enc
+        last = state
+        state = [_seed_from_values(enc, tick=i + 1)]
     return out
 
 
@@ -244,4 +265,4 @@ def run_all() -> dict:
 if __name__ == "__main__":
     import json
     print(json.dumps(run_all(), indent=2))
-# ratios: loc_comments=113:97 imports_exports=8:5 calls_definitions=56:7
+# ratios: loc_comments=128:97 imports_exports=7:5 calls_definitions=67:10

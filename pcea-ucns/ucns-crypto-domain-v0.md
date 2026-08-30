@@ -154,10 +154,13 @@ order of.
 
 The boundary-smearing in the three-factor case raised the hope that
 recovery DECAYS with factor count: that a 5- or 6-factor product hides a
-designated private factor better. `factor_count_sweep.py` tests it at
-carrier 40 and finds **no decay** — recursive-peel recovery runs ~40–67%
-flat across 2..6 factors, noise with no downward trend. More factors give
-the attacker more leaves to match, not the defender more cover.
+designated private factor better. Historical `factor_count_sweep.py` runs
+at carrier 40 found **no decay** — recursive-peel recovery ran ~40-67%
+flat across 2..6 factors, noise with no downward trend. The current default
+suite keeps that full recursive-peel refresh opt-in with
+`PCEA_UCNS_EXPENSIVE=1` because the legacy recursive UCNS solver performs
+exhaustive Fraction-heavy search for this probe. More factors give the
+attacker more leaves to match, not the defender more cover.
 
 The diagnosis underneath is the important part. For a 5-factor product,
 the search's split equals the TRUE ordered (prefix, C) in **0/80** trials

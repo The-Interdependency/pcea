@@ -1,4 +1,4 @@
-# ratios: loc_comments=23:15 imports_exports=2:3 calls_definitions=12:3
+# ratios: loc_comments=24:15 imports_exports=2:3 calls_definitions=13:3
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Tests for the UCNS attack harness.
@@ -22,7 +22,8 @@ ah = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(ah)
 
 pytestmark = pytest.mark.skipif(
-    not ah.UCNS_AVAILABLE, reason="ucns not installed; attack harness inert"
+    not ah.UCNS_AVAILABLE,
+    reason=getattr(ah, "UCNS_IMPORT_ERROR", "recursive UCNS API unavailable"),
 )
 
 
@@ -48,4 +49,4 @@ def test_pruning_eliminates_substantial_search_space():
     # Pruning is an attacker accelerator: it removes a large fraction of
     # the candidate key space at no cost.
     assert r["eliminated_fraction"] > 0.25
-# ratios: loc_comments=23:15 imports_exports=2:3 calls_definitions=12:3
+# ratios: loc_comments=24:15 imports_exports=2:3 calls_definitions=13:3

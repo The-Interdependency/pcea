@@ -1,4 +1,4 @@
-# ratios: loc_comments=19:11 imports_exports=3:2 calls_definitions=7:2
+# ratios: loc_comments=20:11 imports_exports=3:2 calls_definitions=8:2
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Tests for the quotient-based attack and key-space reconciliation.
@@ -21,7 +21,8 @@ qa = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(qa)
 
 pytestmark = pytest.mark.skipif(
-    not qa.UCNS_AVAILABLE, reason="ucns not installed; quotient attack inert"
+    not qa.UCNS_AVAILABLE,
+    reason=getattr(qa, "UCNS_IMPORT_ERROR", "recursive UCNS API unavailable"),
 )
 
 
@@ -38,4 +39,4 @@ def test_factor_search_splits_often_leave_keyspace():
     # usable keys — the reconciliation between the two primitives.
     assert r["factor_search_split_outside_keyspace"] > 0
     assert r["quotient_unique_in_keyspace"] > r["trials"] * 0.6
-# ratios: loc_comments=19:11 imports_exports=3:2 calls_definitions=7:2
+# ratios: loc_comments=20:11 imports_exports=3:2 calls_definitions=8:2

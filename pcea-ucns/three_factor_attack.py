@@ -1,4 +1,4 @@
-# ratios: loc_comments=82:29 imports_exports=8:2 calls_definitions=24:5
+# ratios: loc_comments=103:31 imports_exports=10:2 calls_definitions=28:5
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Three-factor positional attack for PCEA-UCNS.
@@ -19,7 +19,9 @@ private-factor boundary. Two quantities matter:
   first split's parts yields C among the leaves — the realistic attacker,
   who peels iteratively.
 
-MEASURE, not assert. Skipped without ucns.
+MEASURE, not assert. Skipped without recursive UCNS APIs. The historical
+60-trial recursive-peel measurement is opt-in for test cost; quick runs keep
+a small deterministic smoke sample.
 
 Measured result (carrier 40, ⟨2,5⟩, width 3, seed 13): recompose 80/80,
 first-split-clean 0/80, recursive-peel-recovers-C ~49%. Interpretation:
@@ -31,18 +33,31 @@ NOT defeat it. A KEM cannot rest on triple-composition alone.
 
 from __future__ import annotations
 
+import os
 import random
+import sys
 from fractions import Fraction
 from math import lcm
+from pathlib import Path
 from typing import List, Tuple
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ucns_compat import import_ucns_module  # noqa: E402
+
 try:
-    from ucns_recursive.canonical import UCNSObject, multiply
-    from ucns_recursive.factor_search_v08 import SEQ_PRIME, factor_search_v08
+    _canonical = import_ucns_module("canonical")
+    _factor_search = import_ucns_module("factor_search_v08")
+
+    UCNSObject = _canonical.UCNSObject
+    multiply = _canonical.multiply
+    SEQ_PRIME = _factor_search.SEQ_PRIME
+    factor_search_v08 = _factor_search.factor_search_v08
 
     UCNS_AVAILABLE = True
-except ImportError:  # pragma: no cover
+    UCNS_IMPORT_ERROR = ""
+except ImportError as exc:  # pragma: no cover
     UCNS_AVAILABLE = False
+    UCNS_IMPORT_ERROR = str(exc)
 
 
 def _mk(angles: List[Fraction], faces: List[int]) -> "UCNSObject":
@@ -69,6 +84,7 @@ def three_factor_recovery(
     width: int,
     trials: int = 80,
     seed: int = 13,
+    include_recursive_peel: bool = True,
 ) -> dict:
     """Attack P = A ⊠ B ⊠ C at a fixed carrier; C is the private factor.
 
@@ -92,45 +108,56 @@ def three_factor_recovery(
         X, Y = r
         if _struct(Y) == _struct(C) and _struct(X) == _struct(multiply(A, B)):
             first_split_clean += 1
-        leaves: List["UCNSObject"] = []
-        for part in (X, Y):
-            rr = factor_search_v08(part, prune=False)
-            if rr is SEQ_PRIME:
-                leaves.append(part)
-            else:
-                leaves.extend(rr)
-        if any(_struct(leaf) == _struct(C) for leaf in leaves):
-            peel_recovers_C += 1
+        if include_recursive_peel:
+            leaves: List["UCNSObject"] = []
+            for part in (X, Y):
+                rr = factor_search_v08(part, prune=False)
+                if rr is SEQ_PRIME:
+                    leaves.append(part)
+                else:
+                    leaves.extend(rr)
+            if any(_struct(leaf) == _struct(C) for leaf in leaves):
+                peel_recovers_C += 1
     return {
         "denoms": denoms,
         "width": width,
         "trials": trials,
         "recompose": recompose,
         "first_split_clean": first_split_clean,
-        "peel_recovers_C": peel_recovers_C,
-        "peel_recovery_rate": peel_recovers_C / trials,
+        "peel_recovers_C": peel_recovers_C if include_recursive_peel else None,
+        "peel_recovery_rate": peel_recovers_C / trials if include_recursive_peel else None,
     }
 
 
-def run_all() -> dict:
+FULL_RECURSIVE_REQUIRES = (
+    "Run with PCEA_UCNS_EXPENSIVE=1 or call "
+    "three_factor_recovery([8, 5], 3, trials=60) to refresh the historical "
+    "recursive-peel measurement."
+)
+
+
+def run_all(include_recursive_peel: bool = False) -> dict:
     if not UCNS_AVAILABLE:
         return {"available": False}
-    return {
+    report = {
         "available": True,
         "results": [
-            three_factor_recovery([3, 5], 2),
-            three_factor_recovery([8, 5], 3),     # carrier 40 — named candidate
-            three_factor_recovery([3, 5, 7], 3),
+            three_factor_recovery([3, 5], 2, trials=10, include_recursive_peel=include_recursive_peel),
+            three_factor_recovery([8, 5], 3, trials=10, include_recursive_peel=include_recursive_peel),
+            three_factor_recovery([3, 5, 7], 3, trials=10, include_recursive_peel=include_recursive_peel),
         ],
     }
+    if not include_recursive_peel:
+        report["requires_more"] = FULL_RECURSIVE_REQUIRES
+    return report
 
 
 if __name__ == "__main__":
     import json
 
-    rep = run_all()
+    rep = run_all(include_recursive_peel=os.environ.get("PCEA_UCNS_EXPENSIVE") == "1")
     if not rep["available"]:
-        print("ucns not installed; three-factor harness skipped.")
+        print(f"recursive UCNS API unavailable; three-factor harness skipped: {UCNS_IMPORT_ERROR}")
     else:
         print(json.dumps(rep, indent=2))
-# ratios: loc_comments=82:29 imports_exports=8:2 calls_definitions=24:5
+# ratios: loc_comments=103:31 imports_exports=10:2 calls_definitions=28:5

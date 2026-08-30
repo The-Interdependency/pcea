@@ -1,4 +1,4 @@
-# ratios: loc_comments=69:35 imports_exports=10:4 calls_definitions=18:5
+# ratios: loc_comments=79:35 imports_exports=9:4 calls_definitions=24:5
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 UCNS factorization attack harness for PCEA-UCNS domain design.
@@ -22,22 +22,34 @@ never imported by the cipher. It is skipped if ucns is not installed.
 from __future__ import annotations
 
 import random
+import sys
 from fractions import Fraction
 from math import lcm
+from pathlib import Path
 from typing import List, Optional
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ucns_compat import import_ucns_module  # noqa: E402
+
 try:
-    from ucns_recursive.canonical import UCNSObject, multiply
-    from ucns_recursive.catalogue_pruning import (
-        prime_support,
-        prune_payload_catalogue,
-    )
-    from ucns_recursive.domains import generate_payload_catalogue
-    from ucns_recursive.factor_search_v08 import SEQ_PRIME, factor_search_v08
+    _canonical = import_ucns_module("canonical")
+    _catalogue_pruning = import_ucns_module("catalogue_pruning")
+    _domains = import_ucns_module("domains")
+    _factor_search = import_ucns_module("factor_search_v08")
+
+    UCNSObject = _canonical.UCNSObject
+    multiply = _canonical.multiply
+    prime_support = _catalogue_pruning.prime_support
+    prune_payload_catalogue = _catalogue_pruning.prune_payload_catalogue
+    generate_payload_catalogue = _domains.generate_payload_catalogue
+    SEQ_PRIME = _factor_search.SEQ_PRIME
+    factor_search_v08 = _factor_search.factor_search_v08
 
     UCNS_AVAILABLE = True
-except ImportError:  # pragma: no cover - exercised only without ucns
+    UCNS_IMPORT_ERROR = ""
+except ImportError as exc:  # pragma: no cover - exercised only without ucns
     UCNS_AVAILABLE = False
+    UCNS_IMPORT_ERROR = str(exc)
 
 
 def _obj(denoms: List[int], faces: Optional[List[int]] = None) -> "UCNSObject":
@@ -123,7 +135,7 @@ if __name__ == "__main__":
 
     report = run_all()
     if not report["available"]:
-        print("ucns not installed; attack harness skipped.")
+        print(f"recursive UCNS API unavailable; attack harness skipped: {UCNS_IMPORT_ERROR}")
     else:
         print(json.dumps(report, indent=2, default=lambda s: sorted(s)))
-# ratios: loc_comments=69:35 imports_exports=10:4 calls_definitions=18:5
+# ratios: loc_comments=79:35 imports_exports=9:4 calls_definitions=24:5

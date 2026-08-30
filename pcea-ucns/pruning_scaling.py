@@ -1,4 +1,4 @@
-# ratios: loc_comments=114:29 imports_exports=11:3 calls_definitions=52:7
+# ratios: loc_comments=124:29 imports_exports=11:3 calls_definitions=57:7
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Quotient-guided pruning scaling test — the break attempt, and its result.
@@ -42,18 +42,30 @@ from __future__ import annotations
 import math
 import random
 import statistics
+import sys
 from fractions import Fraction
 from math import lcm
+from pathlib import Path
 from typing import List, Tuple
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ucns_compat import import_ucns_module  # noqa: E402
+
 try:
-    from ucns_recursive.canonical import UCNSObject, multiply
-    from ucns_recursive.catalogue_pruning import prime_support
-    from ucns_recursive.left_quotient import left_quotient
+    _canonical = import_ucns_module("canonical")
+    _catalogue_pruning = import_ucns_module("catalogue_pruning")
+    _left_quotient = import_ucns_module("left_quotient")
+
+    UCNSObject = _canonical.UCNSObject
+    multiply = _canonical.multiply
+    prime_support = _catalogue_pruning.prime_support
+    left_quotient = _left_quotient.left_quotient
 
     UCNS_AVAILABLE = True
-except ImportError:  # pragma: no cover
+    UCNS_IMPORT_ERROR = ""
+except ImportError as exc:  # pragma: no cover
     UCNS_AVAILABLE = False
+    UCNS_IMPORT_ERROR = str(exc)
 
 
 def _mk(angles: List[Fraction], faces: List[int]) -> "UCNSObject":
@@ -169,10 +181,10 @@ if __name__ == "__main__":
 
     rep = run_all()
     if not rep["available"]:
-        print("ucns not installed; scaling test skipped.")
+        print(f"recursive UCNS API unavailable; scaling test skipped: {UCNS_IMPORT_ERROR}")
     else:
         for k in ("prefix_angle", "strong_prune"):
             print(f"{k}: cost ~ |KS|^{rep[k]['slope']:.2f}")
             for n, m in rep[k]["data"]:
                 print(f"  |KS|={n:5d}  checks={m:6.1f}  ratio={m/n:.3f}")
-# ratios: loc_comments=114:29 imports_exports=11:3 calls_definitions=52:7
+# ratios: loc_comments=124:29 imports_exports=11:3 calls_definitions=57:7

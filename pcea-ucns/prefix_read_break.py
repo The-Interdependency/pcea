@@ -1,4 +1,4 @@
-# ratios: loc_comments=78:35 imports_exports=8:2 calls_definitions=28:6
+# ratios: loc_comments=87:35 imports_exports=9:2 calls_definitions=32:6
 # GPT/Claude generated; context, prompt Erin Spencer
 """
 Prefix-read structural break for the UCNS-KEM regime.
@@ -42,17 +42,28 @@ MEASURE, not assert. Skipped without ucns.
 from __future__ import annotations
 
 import random
+import sys
 from fractions import Fraction
 from math import lcm
+from pathlib import Path
 from typing import List
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ucns_compat import import_ucns_module  # noqa: E402
+
 try:
-    from ucns_recursive.canonical import UCNSObject, multiply
-    from ucns_recursive.left_quotient import right_quotient
+    _canonical = import_ucns_module("canonical")
+    _left_quotient = import_ucns_module("left_quotient")
+
+    UCNSObject = _canonical.UCNSObject
+    multiply = _canonical.multiply
+    right_quotient = _left_quotient.right_quotient
 
     UCNS_AVAILABLE = True
-except ImportError:  # pragma: no cover
+    UCNS_IMPORT_ERROR = ""
+except ImportError as exc:  # pragma: no cover
     UCNS_AVAILABLE = False
+    UCNS_IMPORT_ERROR = str(exc)
 
 
 def _divisors(L: int) -> List[int]:
@@ -134,7 +145,7 @@ if __name__ == "__main__":
 
     rep = run_all()
     if not rep["available"]:
-        print("ucns not installed; prefix-read break skipped.")
+        print(f"recursive UCNS API unavailable; prefix-read break skipped: {UCNS_IMPORT_ERROR}")
     else:
         print(json.dumps(rep, indent=2))
-# ratios: loc_comments=78:35 imports_exports=8:2 calls_definitions=28:6
+# ratios: loc_comments=87:35 imports_exports=9:2 calls_definitions=32:6
