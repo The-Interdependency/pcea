@@ -19,7 +19,7 @@
       "pcea-ucns/arity/**",
       "tests/test_arity_*.py"
     ],
-    "candidate_commit": "PENDING_F1_SHA_UNTIL_CANDIDATE_COMMIT",
+    "candidate_commit": "e5fb94defae29a4c1b6d3e796763d575b34e4c08",
     "candidate_commit_rule": "Initial freeze may use PENDING until immediate metadata-only correction records the F1 commit SHA."
   },
   "artifact_receipts": {
