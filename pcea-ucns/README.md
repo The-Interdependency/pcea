@@ -37,12 +37,24 @@ PCEA transform and speculative UCNS-native key establishment.
    `pcea/` runtime must remain the symmetric, state-synchronized transform and
    must not silently depend on UCNS inversion or catalogue APIs.
 
+6. **Exercise a provisioned authenticated-session wrapper without promoting it.**
+   `ratcheted_session.py` wraps the stateless PCEA transform with independent
+   directional chains, strict sequencing, transcript-bound HMAC authentication,
+   key separation, and verify-before-advance receive behavior. Its regression
+   harness covers wrong-secret rejection, transcript binding, replay,
+   reordering, failure rollback, key separation, and minimal public metadata.
+   It remains a proving-ground prototype pending harder attacks and independent
+   cryptographic review.
+
 ## What it cannot honestly do yet
 
 - It cannot claim PCEA-UCNS is secure public-key encryption.
 - It cannot turn a passing attack harness into a proof of hardness.
-- It cannot replace authentication, nonce/session design, or key-management
-  requirements for a production channel.
+- It cannot call the ratcheted-session prototype production secure or promote
+  it into `pcea/` without independent cryptographic review and the remaining
+  session-management attack work.
+- It cannot replace nonce/session design, persistence/rollback design,
+  resynchronization, or key-management requirements for a production channel.
 - It cannot ship a UCNS-KEM while the current documents mark the native UCNS
   key-establishment line as blocked or open.
 
@@ -55,6 +67,7 @@ PCEA transform and speculative UCNS-native key establishment.
 | Key-space restriction | `quotient_attack.py`, `pruning_scaling.py` | Ask whether the private factor is unique inside a finite key space and whether pruning beats brute search | Useful distinction; cheap pruning measured as constant-factor, not a proof |
 | Structural readout breaks | `prefix_read_break.py`, `attack1_minkowski_break.py` | Look for direct reconstruction or algebraic inversion that bypasses key-space search | Negative gates: tested candidate families break |
 | Gonal/state communication | `gonal_architecture.py` | Explore PCEA-advanced private gonal rotation for state/token communication | Experimental; further bridge/attack gates remain |
+| Provisioned authenticated session | `ratcheted_session.py` | Exercise ratcheting, directional key separation, transcript authentication, strict sequencing, and rollback-safe receive state around PCEA | Prototype harness survives its current regression set; not runtime or a security certification |
 | Candidate ledger | `candidate-ledger.json` | Track every UCNS-assisted PCEA candidate, its claim, public/private material, known attacks, harnesses, status, and next attack | Process guardrail; not a security proof |
 | Option D one-way-map gate | `one_way_map_gate.py` | Reject UCNS-native one-way-map sketches that lack quotient, prefix, set-basis, catalogue, enumeration, MITM, active, correctness, and scaling attack coverage | Attack-agenda gate; not a security proof |
 | Fed Option D UCNS map | `option_d_ucns_map.py` | Feed a face/payload spectrum projection into the Option D gate as the next concrete map to attack | Spec-level candidate; no security claim |
@@ -62,10 +75,11 @@ PCEA transform and speculative UCNS-native key establishment.
 
 ## Potential next avenues
 
-See `avenues.md` for a bounded research agenda: pre-shared and hybrid fallback
-paths, UCNS-as-context binding, non-product one-way-map candidates, hidden
-composition-order experiments, payload-depth tests, gonal bridge work,
-commitment use, ratcheted PCEA sessions, and a candidate ledger.
+See `avenues.md` for the wider bounded research agenda. For the provisioned
+session specifically, the next boundary is adversarial: truncation, session-id
+reuse, state-compromise/forward-secrecy limits, persistent rollback, concurrent
+senders, and resynchronization behavior must be attacked before any runtime
+promotion is considered.
 
 ## How to use it
 
@@ -81,10 +95,20 @@ Run the symmetric PCEA runtime gate only:
 python -m pytest -q tests/test_cipher.py tests/test_codec.py tests/test_kdf.py tests/test_instance.py tests/test_contract_spec.py
 ```
 
-Run the UCNS proving-ground tests:
+Run the ratcheted-session regression harness only:
 
 ```bash
-python -m pytest -q tests/test_attack_harness.py tests/test_positional_attack.py tests/test_quotient_attack.py tests/test_prefix_read_break.py tests/test_projection_action_candidate.py tests/test_pruning_scaling.py tests/test_attack1_minkowski_break.py tests/test_three_factor_attack.py tests/test_factor_count_sweep.py tests/test_gonal_architecture.py
+python -m pytest -q tests/test_ratcheted_session.py
+```
+
+The prototype is loaded as a proving-ground file rather than imported from the
+`pcea` package. Use it to attack the session design and preserve the runtime
+boundary; do not treat it as a production API.
+
+Run the broader UCNS proving-ground tests:
+
+```bash
+python -m pytest -q tests/test_attack_harness.py tests/test_positional_attack.py tests/test_quotient_attack.py tests/test_prefix_read_break.py tests/test_projection_action_candidate.py tests/test_pruning_scaling.py tests/test_attack1_minkowski_break.py tests/test_three_factor_attack.py tests/test_factor_count_sweep.py tests/test_gonal_architecture.py tests/test_option_family_specs.py tests/test_ratcheted_session.py
 ```
 
 If `ucns` is not installed, UCNS-dependent tests skip by design. That skip is
