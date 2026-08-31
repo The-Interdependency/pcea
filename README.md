@@ -36,7 +36,7 @@ assert dec.decrypt(enc.encrypt([state2])) == [state2]
 
 ## PCEA ↔ UCNS boundary
 
-PCEA is specified to **decrypt/invert via keys** and not through UCNS inverse operations.
+PCEA is specified to decrypt/invert **via keys** and not through UCNS inverse operations.
 
 - PCEA consumes forward arithmetic substrate behavior only.
 - **Security rests on key management**: synchronized/protected `last_state`, approved secret generation, and correct session handling.
