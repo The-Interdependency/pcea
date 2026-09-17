@@ -54,18 +54,23 @@ value does not leak through output length.
 #   given: to_fixed receives an unsigned value that cannot fit in k base-p digits
 #   then:  raises ValueError instead of truncating high-order digits
 #   class: correctness
+#
+# id: codec_integer_domains_are_exact
+#   given: a public codec integer field receives bool or another non-exact int
+#   then:  raises ValueError instead of admitting Python integer-like coercions
+#   class: correctness
 # === END CONTRACTS ===
 
 from __future__ import annotations
 
 
 def _validate_word_bits(word_bits: int) -> None:
-    if not isinstance(word_bits, int) or word_bits < 1:
+    if type(word_bits) is not int or word_bits < 1:
         raise ValueError("word_bits must be a positive integer")
 
 
 def _validate_prime_base(p: int) -> None:
-    if not isinstance(p, int) or p < 2:
+    if type(p) is not int or p < 2:
         raise ValueError("p must be an integer base >= 2")
 
 
@@ -76,7 +81,7 @@ def _signed_bounds(word_bits: int) -> tuple[int, int]:
 
 
 def _validate_signed_word(v: int, word_bits: int) -> None:
-    if not isinstance(v, int):
+    if type(v) is not int:
         raise ValueError("value must be an integer")
     lo, hi = _signed_bounds(word_bits)
     if v < lo or v > hi:
@@ -84,7 +89,7 @@ def _validate_signed_word(v: int, word_bits: int) -> None:
 
 
 def _validate_unsigned_position(u: int, word_bits: int) -> None:
-    if not isinstance(u, int):
+    if type(u) is not int:
         raise ValueError("unsigned position must be an integer")
     _validate_word_bits(word_bits)
     if u < 0 or u >= (1 << word_bits):
@@ -120,9 +125,9 @@ def digit_count(p: int, word_bits: int) -> int:
 def to_fixed(u: int, p: int, k: int) -> list[int]:
     """Encode unsigned integer u as exactly k standard base-p digits, little-endian."""
     _validate_prime_base(p)
-    if not isinstance(k, int) or k < 0:
+    if type(k) is not int or k < 0:
         raise ValueError("k must be a non-negative integer")
-    if not isinstance(u, int):
+    if type(u) is not int:
         raise ValueError("unsigned value must be an integer")
     capacity = p ** k
     if u < 0 or u >= capacity:
@@ -140,7 +145,7 @@ def from_fixed(digits: list[int], p: int) -> int:
     result = 0
     power = 1
     for d in digits:
-        if not isinstance(d, int) or d < 0 or d >= p:
+        if type(d) is not int or d < 0 or d >= p:
             raise ValueError(f"digit must be an integer in [0, {p})")
         result += d * power
         power *= p

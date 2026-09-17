@@ -4,6 +4,16 @@ import pytest
 
 from pcea.instance import PCEAInstance
 
+# === CHECKS ===
+# id: check_instance_initial_state_is_exact_signed_integer_carrier
+#   proves: instance_initial_state_is_exact_signed_integer_carrier
+#   call: self::test_initial_state_enforces_exact_integer_and_signed_range
+#   requires: python3
+#   timeout: 5
+#   mutates: none
+#   cleanup: none
+# === END CHECKS ===
+
 CIRCLES = 7
 TENSORS = 7
 
@@ -14,6 +24,10 @@ def _seed(base: int = 1) -> list[list[int]]:
 
 def _state(n: int, base: int = 1) -> list[list[list[int]]]:
     return [_seed(base + i * 100) for i in range(n)]
+
+
+def _zero_seed() -> list[list[int]]:
+    return [[0] * TENSORS for _ in range(CIRCLES)]
 
 
 def _pair(seed_state):
@@ -112,4 +126,18 @@ def test_last_state_unchanged_after_empty_encrypt():
     inst = PCEAInstance(init)
     inst.encrypt([])
     assert inst.last_state == init
+
+
+@pytest.mark.parametrize("invalid", [True, 1.0, "1", None, -129, 128])
+def test_initial_state_enforces_exact_integer_and_signed_range(invalid):
+    initial = _state(1, 0)
+    initial[0][0][0] = invalid
+    with pytest.raises(ValueError):
+        PCEAInstance(initial, word_bits=8)
+
+
+def test_initial_state_accepts_signed_boundaries():
+    initial = [_zero_seed()]
+    initial[0][0][0], initial[0][0][1] = -128, 127
+    assert PCEAInstance(initial, word_bits=8).last_state == initial
 # ratios: loc_comments=77:3 imports_exports=2:13 calls_definitions=50:16

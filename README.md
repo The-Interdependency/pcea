@@ -15,6 +15,8 @@ decrypt: v_j = (e_j - k_j) mod p
 
 Fixed-width encoding prevents output digit count from exposing the plaintext magnitude class. `word_bits` must be large enough for the caller's signed range and must match between sender and receiver.
 
+State and synchronized prior-state cells must be exact Python `int` values inside the signed `word_bits` range. KDF fields use a versioned, length-delimited binary integer encoding; arbitrary objects are never canonicalized through `str(value)`. This transcript change is intentionally incompatible with ciphertext produced by the former text-encoded KDF.
+
 ## Usage
 
 ```python

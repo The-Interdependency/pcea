@@ -14,7 +14,8 @@ magnitude do not leak.
 
 Prime selection: p = prime_at(circle_idx * 7 + tensor_idx)
 Fixed digit count: k = digit_count(p, word_bits)
-Key: SHA-256(own + heptagram neighbors ±3, seed_idx, circle_idx, tensor_idx)
+Key: SHA-256(versioned integer transcript including contributors, address,
+             stream length, prime base, and block counter)
 """
 
 # === MODULE_BUILD ===
@@ -48,11 +49,25 @@ Key: SHA-256(own + heptagram neighbors ±3, seed_idx, circle_idx, tensor_idx)
 #   given: decrypt_seed receives valid fixed-width ciphertext but a mismatched last_seed
 #   then:  returns deterministic signed word_bits values instead of surfacing unused code-point overflow
 #   class: correctness
+#
+# id: cipher_kdf_state_is_exact_signed_integer_carrier
+#   given: plaintext or last_state contains a non-exact int or a value outside the signed word_bits range
+#   then: encryption or decryption raises ValueError before deriving any key-stream digit
+#   class: correctness
 # === END CONTRACTS ===
 
 from __future__ import annotations
 
-from .codec import digit_count, from_fixed, mobius_decode, mobius_encode, to_fixed
+from typing import Optional
+
+from .codec import (
+    _validate_signed_word,
+    digit_count,
+    from_fixed,
+    mobius_decode,
+    mobius_encode,
+    to_fixed,
+)
 from .kdf import key_stream
 from .primes import prime_at
 
@@ -61,9 +76,28 @@ TENSOR_COUNT = 7
 DEFAULT_WORD_BITS = 64
 
 
-def _validate_seed(s: list[list[int]], name: str) -> None:
-    if len(s) != CIRCLE_COUNT or any(len(row) != TENSOR_COUNT for row in s):
+def _validate_seed(
+    s: list[list[int]], name: str, word_bits: Optional[int] = None
+) -> None:
+    if (
+        type(s) is not list
+        or len(s) != CIRCLE_COUNT
+        or any(type(row) is not list or len(row) != TENSOR_COUNT for row in s)
+    ):
         raise ValueError(f"{name} must be a {CIRCLE_COUNT}×{TENSOR_COUNT} integer array")
+    for circle_idx, row in enumerate(s):
+        for tensor_idx, value in enumerate(row):
+            if type(value) is not int:
+                raise ValueError(
+                    f"{name}[{circle_idx}][{tensor_idx}] must be an exact integer"
+                )
+            if word_bits is not None:
+                try:
+                    _validate_signed_word(value, word_bits)
+                except ValueError as exc:
+                    raise ValueError(
+                        f"{name}[{circle_idx}][{tensor_idx}] {exc}"
+                    ) from exc
 
 
 def _contributors(last_seed: list[list[int]], circle_idx: int, tensor_idx: int) -> list[int]:
@@ -133,8 +167,8 @@ def encrypt_seed(
     Returns:
         Encrypted seed as a 7×7 array of unsigned integers.
     """
-    _validate_seed(seed, "seed")
-    _validate_seed(last_seed, "last_seed")
+    _validate_seed(seed, "seed", word_bits)
+    _validate_seed(last_seed, "last_seed", word_bits)
     return [
         [
             _encrypt_element(seed[c][t], seed_idx, c, t, last_seed, word_bits)
@@ -163,7 +197,7 @@ def decrypt_seed(
         Recovered seed as a 7×7 integer array.
     """
     _validate_seed(encrypted, "encrypted")
-    _validate_seed(last_seed, "last_seed")
+    _validate_seed(last_seed, "last_seed", word_bits)
     return [
         [
             _decrypt_element(encrypted[c][t], seed_idx, c, t, last_seed, word_bits)

@@ -6,6 +6,16 @@ export default defineMsdmdCollection({
       "block": "CONTRACTS",
       "fields": {
         "class": "correctness",
+        "given": "plaintext or last_state contains a non-exact int or a value outside the signed word_bits range",
+        "then": "encryption or decryption raises ValueError before deriving any key-stream digit"
+      },
+      "file": "pcea/cipher.py",
+      "id": "cipher_kdf_state_is_exact_signed_integer_carrier"
+    },
+    {
+      "block": "CONTRACTS",
+      "fields": {
+        "class": "correctness",
         "given": "encrypt_seed receives any plaintext element outside the signed word_bits range",
         "then": "raises ValueError before emitting ciphertext"
       },
@@ -45,6 +55,16 @@ export default defineMsdmdCollection({
       },
       "file": "pcea/cipher.py",
       "id": "pcea_cipher"
+    },
+    {
+      "block": "CONTRACTS",
+      "fields": {
+        "class": "correctness",
+        "given": "a public codec integer field receives bool or another non-exact int",
+        "then": "raises ValueError instead of admitting Python integer-like coercions"
+      },
+      "file": "pcea/codec.py",
+      "id": "codec_integer_domains_are_exact"
     },
     {
       "block": "CONTRACTS",
@@ -115,6 +135,16 @@ export default defineMsdmdCollection({
       "id": "pcea_contract"
     },
     {
+      "block": "CONTRACTS",
+      "fields": {
+        "class": "correctness",
+        "given": "PCEAInstance receives an initial state cell",
+        "then": "the cell must be an exact int inside the configured signed word_bits range"
+      },
+      "file": "pcea/instance.py",
+      "id": "instance_initial_state_is_exact_signed_integer_carrier"
+    },
+    {
       "block": "MODULE_BUILD",
       "fields": {
         "admin_only": "false",
@@ -139,11 +169,21 @@ export default defineMsdmdCollection({
       "id": "pcea_instance"
     },
     {
+      "block": "CONTRACTS",
+      "fields": {
+        "class": "correctness",
+        "given": "key_stream receives contributor values and address parameters",
+        "then": "every value is an exact int and the hash transcript is schema-prefixed and length-delimited without implicit object stringification"
+      },
+      "file": "pcea/kdf.py",
+      "id": "kdf_transcript_is_typed_canonical_integer_bytes"
+    },
+    {
       "block": "MODULE_BUILD",
       "fields": {
         "admin_only": "false",
         "auth_boundary": "none",
-        "internal_surface": "none",
+        "internal_surface": "typed length-delimited integer transcript encoding",
         "module_kind": "engine",
         "module_name": "kdf",
         "network_boundary": "none",
@@ -189,6 +229,32 @@ export default defineMsdmdCollection({
     {
       "block": "CHECKS",
       "fields": {
+        "call": "self::test_seed_and_last_seed_signed_boundaries",
+        "cleanup": "none",
+        "mutates": "none",
+        "proves": "cipher_kdf_state_is_exact_signed_integer_carrier",
+        "requires": "python3",
+        "timeout": "5"
+      },
+      "file": "tests/test_cipher.py",
+      "id": "check_cipher_enforces_signed_boundaries_before_kdf"
+    },
+    {
+      "block": "CHECKS",
+      "fields": {
+        "call": "self::test_encrypt_seed_rejects_noninteger_last_state_before_kdf",
+        "cleanup": "none",
+        "mutates": "none",
+        "proves": "cipher_kdf_state_is_exact_signed_integer_carrier",
+        "requires": "python3",
+        "timeout": "5"
+      },
+      "file": "tests/test_cipher.py",
+      "id": "check_cipher_rejects_noninteger_state_before_kdf"
+    },
+    {
+      "block": "CHECKS",
+      "fields": {
         "call": "self::test_encrypt_seed_rejects_plaintext_outside_word_range",
         "cleanup": "none",
         "mutates": "none",
@@ -215,6 +281,19 @@ export default defineMsdmdCollection({
     {
       "block": "CHECKS",
       "fields": {
+        "call": "self::test_codec_rejects_bool_in_every_integer_domain",
+        "cleanup": "none",
+        "mutates": "none",
+        "proves": "codec_integer_domains_are_exact",
+        "requires": "python3",
+        "timeout": "5"
+      },
+      "file": "tests/test_codec.py",
+      "id": "check_codec_integer_domains_are_exact"
+    },
+    {
+      "block": "CHECKS",
+      "fields": {
         "call": "self::test_encode_rejects_values_outside_signed_word_range",
         "cleanup": "none",
         "mutates": "none",
@@ -237,9 +316,77 @@ export default defineMsdmdCollection({
       },
       "file": "tests/test_codec.py",
       "id": "check_fixed_width_codec_rejects_overflow"
+    },
+    {
+      "block": "CHECKS",
+      "fields": {
+        "call": "self::test_initial_state_enforces_exact_integer_and_signed_range",
+        "cleanup": "none",
+        "mutates": "none",
+        "proves": "instance_initial_state_is_exact_signed_integer_carrier",
+        "requires": "python3",
+        "timeout": "5"
+      },
+      "file": "tests/test_instance.py",
+      "id": "check_instance_initial_state_is_exact_signed_integer_carrier"
+    },
+    {
+      "block": "CHECKS",
+      "fields": {
+        "call": "self::test_canonical_transcript_is_stable_and_length_delimited",
+        "cleanup": "none",
+        "mutates": "none",
+        "proves": "kdf_transcript_is_typed_canonical_integer_bytes",
+        "requires": "python3",
+        "timeout": "5"
+      },
+      "file": "tests/test_kdf.py",
+      "id": "check_kdf_transcript_is_typed_canonical_integer_bytes"
     }
   ],
   "edges": [
+    {
+      "from": "check_cipher_enforces_signed_boundaries_before_kdf",
+      "kind": "calls",
+      "source_block": "CHECKS",
+      "source_id": "check_cipher_enforces_signed_boundaries_before_kdf",
+      "to": "self::test_seed_and_last_seed_signed_boundaries"
+    },
+    {
+      "from": "check_cipher_enforces_signed_boundaries_before_kdf",
+      "kind": "claims_proves",
+      "source_block": "CHECKS",
+      "source_id": "check_cipher_enforces_signed_boundaries_before_kdf",
+      "to": "cipher_kdf_state_is_exact_signed_integer_carrier"
+    },
+    {
+      "from": "check_cipher_enforces_signed_boundaries_before_kdf",
+      "kind": "requires",
+      "source_block": "CHECKS",
+      "source_id": "check_cipher_enforces_signed_boundaries_before_kdf",
+      "to": "python3"
+    },
+    {
+      "from": "check_cipher_rejects_noninteger_state_before_kdf",
+      "kind": "calls",
+      "source_block": "CHECKS",
+      "source_id": "check_cipher_rejects_noninteger_state_before_kdf",
+      "to": "self::test_encrypt_seed_rejects_noninteger_last_state_before_kdf"
+    },
+    {
+      "from": "check_cipher_rejects_noninteger_state_before_kdf",
+      "kind": "claims_proves",
+      "source_block": "CHECKS",
+      "source_id": "check_cipher_rejects_noninteger_state_before_kdf",
+      "to": "cipher_kdf_state_is_exact_signed_integer_carrier"
+    },
+    {
+      "from": "check_cipher_rejects_noninteger_state_before_kdf",
+      "kind": "requires",
+      "source_block": "CHECKS",
+      "source_id": "check_cipher_rejects_noninteger_state_before_kdf",
+      "to": "python3"
+    },
     {
       "from": "check_cipher_rejects_plaintext_outside_word_range",
       "kind": "calls",
@@ -283,6 +430,27 @@ export default defineMsdmdCollection({
       "to": "python3"
     },
     {
+      "from": "check_codec_integer_domains_are_exact",
+      "kind": "calls",
+      "source_block": "CHECKS",
+      "source_id": "check_codec_integer_domains_are_exact",
+      "to": "self::test_codec_rejects_bool_in_every_integer_domain"
+    },
+    {
+      "from": "check_codec_integer_domains_are_exact",
+      "kind": "claims_proves",
+      "source_block": "CHECKS",
+      "source_id": "check_codec_integer_domains_are_exact",
+      "to": "codec_integer_domains_are_exact"
+    },
+    {
+      "from": "check_codec_integer_domains_are_exact",
+      "kind": "requires",
+      "source_block": "CHECKS",
+      "source_id": "check_codec_integer_domains_are_exact",
+      "to": "python3"
+    },
+    {
       "from": "check_codec_rejects_out_of_range_signed_words",
       "kind": "calls",
       "source_block": "CHECKS",
@@ -322,6 +490,48 @@ export default defineMsdmdCollection({
       "kind": "requires",
       "source_block": "CHECKS",
       "source_id": "check_fixed_width_codec_rejects_overflow",
+      "to": "python3"
+    },
+    {
+      "from": "check_instance_initial_state_is_exact_signed_integer_carrier",
+      "kind": "calls",
+      "source_block": "CHECKS",
+      "source_id": "check_instance_initial_state_is_exact_signed_integer_carrier",
+      "to": "self::test_initial_state_enforces_exact_integer_and_signed_range"
+    },
+    {
+      "from": "check_instance_initial_state_is_exact_signed_integer_carrier",
+      "kind": "claims_proves",
+      "source_block": "CHECKS",
+      "source_id": "check_instance_initial_state_is_exact_signed_integer_carrier",
+      "to": "instance_initial_state_is_exact_signed_integer_carrier"
+    },
+    {
+      "from": "check_instance_initial_state_is_exact_signed_integer_carrier",
+      "kind": "requires",
+      "source_block": "CHECKS",
+      "source_id": "check_instance_initial_state_is_exact_signed_integer_carrier",
+      "to": "python3"
+    },
+    {
+      "from": "check_kdf_transcript_is_typed_canonical_integer_bytes",
+      "kind": "calls",
+      "source_block": "CHECKS",
+      "source_id": "check_kdf_transcript_is_typed_canonical_integer_bytes",
+      "to": "self::test_canonical_transcript_is_stable_and_length_delimited"
+    },
+    {
+      "from": "check_kdf_transcript_is_typed_canonical_integer_bytes",
+      "kind": "claims_proves",
+      "source_block": "CHECKS",
+      "source_id": "check_kdf_transcript_is_typed_canonical_integer_bytes",
+      "to": "kdf_transcript_is_typed_canonical_integer_bytes"
+    },
+    {
+      "from": "check_kdf_transcript_is_typed_canonical_integer_bytes",
+      "kind": "requires",
+      "source_block": "CHECKS",
+      "source_id": "check_kdf_transcript_is_typed_canonical_integer_bytes",
       "to": "python3"
     },
     {
