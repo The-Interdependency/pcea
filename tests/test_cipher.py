@@ -20,6 +20,22 @@ from pcea.cipher import decrypt_seed, decrypt_state, encrypt_seed, encrypt_state
 #   timeout: 5
 #   mutates: none
 #   cleanup: none
+#
+# id: check_cipher_rejects_noninteger_state_before_kdf
+#   proves: cipher_kdf_state_is_exact_signed_integer_carrier
+#   call: self::test_encrypt_seed_rejects_noninteger_last_state_before_kdf
+#   requires: python3
+#   timeout: 5
+#   mutates: none
+#   cleanup: none
+#
+# id: check_cipher_enforces_signed_boundaries_before_kdf
+#   proves: cipher_kdf_state_is_exact_signed_integer_carrier
+#   call: self::test_seed_and_last_seed_signed_boundaries
+#   requires: python3
+#   timeout: 5
+#   mutates: none
+#   cleanup: none
 # === END CHECKS ===
 
 CIRCLES = 7
@@ -164,4 +180,51 @@ def test_encrypt_state_seed_idx_varies():
     encrypted = encrypt_state(state, last)
     # Same seed values at different positions should encrypt differently
     assert encrypted[0] != encrypted[1]
+
+
+@pytest.mark.parametrize("invalid", [True, 1.0, "1", None])
+def test_encrypt_seed_rejects_noninteger_last_state_before_kdf(monkeypatch, invalid):
+    seed = _zero_seed()
+    last = _zero_seed()
+    last[0][0] = invalid
+
+    def unexpected_kdf(*args, **kwargs):
+        raise AssertionError("KDF must not run for an invalid carrier")
+
+    monkeypatch.setattr("pcea.cipher.key_stream", unexpected_kdf)
+    with pytest.raises(ValueError, match="exact integer"):
+        encrypt_seed(seed, last, word_bits=8)
+
+
+def test_exact_integer_one_remains_accepted():
+    seed = _zero_seed()
+    last = _zero_seed()
+    last[0][0] = 1
+    assert decrypt_seed(encrypt_seed(seed, last, word_bits=8), last, word_bits=8) == seed
+
+
+def test_seed_and_last_seed_signed_boundaries():
+    seed = _zero_seed()
+    last = _zero_seed()
+    seed[0][0], seed[0][1] = -128, 127
+    last[0][0], last[0][1] = -128, 127
+    assert decrypt_seed(encrypt_seed(seed, last, word_bits=8), last, word_bits=8) == seed
+
+    for invalid in (-129, 128):
+        bad_seed = _zero_seed()
+        bad_seed[0][0] = invalid
+        with pytest.raises(ValueError, match="signed word_bits range"):
+            encrypt_seed(bad_seed, _zero_seed(), word_bits=8)
+
+        bad_last = _zero_seed()
+        bad_last[0][0] = invalid
+        with pytest.raises(ValueError, match="signed word_bits range"):
+            encrypt_seed(_zero_seed(), bad_last, word_bits=8)
+
+
+def test_decrypt_seed_rejects_noninteger_ciphertext():
+    encrypted = _zero_seed()
+    encrypted[0][0] = True
+    with pytest.raises(ValueError, match="exact integer"):
+        decrypt_seed(encrypted, _zero_seed(), word_bits=8)
 # ratios: loc_comments=100:24 imports_exports=4:17 calls_definitions=65:19

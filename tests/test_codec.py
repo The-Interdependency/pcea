@@ -20,6 +20,14 @@ from pcea.codec import digit_count, from_fixed, mobius_decode, mobius_encode, to
 #   timeout: 5
 #   mutates: none
 #   cleanup: none
+#
+# id: check_codec_integer_domains_are_exact
+#   proves: codec_integer_domains_are_exact
+#   call: self::test_codec_rejects_bool_in_every_integer_domain
+#   requires: python3
+#   timeout: 5
+#   mutates: none
+#   cleanup: none
 # === END CHECKS ===
 
 
@@ -152,4 +160,24 @@ def test_roundtrip_small_word_bits():
         k = digit_count(p, W)
         for u in range(0, 256, 13):
             assert from_fixed(to_fixed(u, p, k), p) == u
+
+
+@pytest.mark.parametrize(
+    "call",
+    [
+        lambda: mobius_encode(True, 8),
+        lambda: mobius_encode(1, True),
+        lambda: mobius_decode(True, 8),
+        lambda: digit_count(True, 8),
+        lambda: digit_count(2, True),
+        lambda: to_fixed(True, 2, 8),
+        lambda: to_fixed(1, True, 8),
+        lambda: to_fixed(1, 2, True),
+        lambda: from_fixed([True], 2),
+        lambda: from_fixed([1], True),
+    ],
+)
+def test_codec_rejects_bool_in_every_integer_domain(call):
+    with pytest.raises(ValueError):
+        call()
 # ratios: loc_comments=84:24 imports_exports=2:20 calls_definitions=38:20

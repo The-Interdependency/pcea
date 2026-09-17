@@ -32,11 +32,18 @@ a tensor; each seed is itself a tensor.
 #   unresolved: none
 # === END MODULE_BUILD ===
 
+# === CONTRACTS ===
+# id: instance_initial_state_is_exact_signed_integer_carrier
+#   given: PCEAInstance receives an initial state cell
+#   then: the cell must be an exact int inside the configured signed word_bits range
+#   class: correctness
+# === END CONTRACTS ===
+
 from __future__ import annotations
 
 import copy
 
-from .cipher import DEFAULT_WORD_BITS, decrypt_state, encrypt_state
+from .cipher import DEFAULT_WORD_BITS, _validate_seed, decrypt_state, encrypt_state
 
 Seed = list[list[int]]
 State = list[Seed]
@@ -66,9 +73,7 @@ class PCEAInstance:
         if not seed:
             raise ValueError("seed must be non-empty")
         for i, s in enumerate(seed):
-            if (not isinstance(s, list) or len(s) != 7
-                    or any(not isinstance(row, list) or len(row) != 7 for row in s)):
-                raise ValueError(f"seed[{i}] must be a 7×7 list of integers")
+            _validate_seed(s, f"seed[{i}]", word_bits)
         self._last: State = copy.deepcopy(seed)
         self._word_bits = word_bits
 
