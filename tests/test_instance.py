@@ -1,4 +1,4 @@
-# ratios: loc_comments=77:3 imports_exports=2:13 calls_definitions=50:16
+# ratios: loc_comments=77:3 imports_exports=2:13 calls_definitions=49:16
 # GPT/Claude generated; context, prompt Erin Spencer
 import pytest
 
@@ -128,16 +128,16 @@ def test_last_state_unchanged_after_empty_encrypt():
     assert inst.last_state == init
 
 
-@pytest.mark.parametrize("invalid", [True, 1.0, "1", None, -129, 128])
-def test_initial_state_enforces_exact_integer_and_signed_range(invalid):
-    initial = _state(1, 0)
-    initial[0][0][0] = invalid
-    with pytest.raises(ValueError):
-        PCEAInstance(initial, word_bits=8)
+def test_initial_state_enforces_exact_integer_and_signed_range():
+    for invalid in (True, 1.0, "1", None, -129, 128):
+        initial = _state(1, 0)
+        initial[0][0][0] = invalid
+        with pytest.raises(ValueError):
+            PCEAInstance(initial, word_bits=8)
 
 
 def test_initial_state_accepts_signed_boundaries():
     initial = [_zero_seed()]
     initial[0][0][0], initial[0][0][1] = -128, 127
     assert PCEAInstance(initial, word_bits=8).last_state == initial
-# ratios: loc_comments=77:3 imports_exports=2:13 calls_definitions=50:16
+# ratios: loc_comments=77:3 imports_exports=2:13 calls_definitions=49:16
