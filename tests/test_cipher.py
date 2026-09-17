@@ -1,4 +1,4 @@
-# ratios: loc_comments=100:24 imports_exports=4:17 calls_definitions=65:19
+# ratios: loc_comments=101:24 imports_exports=4:17 calls_definitions=65:19
 # GPT/Claude generated; context, prompt Erin Spencer
 import pytest
 
@@ -182,18 +182,19 @@ def test_encrypt_state_seed_idx_varies():
     assert encrypted[0] != encrypted[1]
 
 
-@pytest.mark.parametrize("invalid", [True, 1.0, "1", None])
-def test_encrypt_seed_rejects_noninteger_last_state_before_kdf(monkeypatch, invalid):
-    seed = _zero_seed()
-    last = _zero_seed()
-    last[0][0] = invalid
+def test_encrypt_seed_rejects_noninteger_last_state_before_kdf():
+    for invalid in (True, 1.0, "1", None):
+        seed = _zero_seed()
+        last = _zero_seed()
+        last[0][0] = invalid
 
-    def unexpected_kdf(*args, **kwargs):
-        raise AssertionError("KDF must not run for an invalid carrier")
+        with pytest.MonkeyPatch.context() as monkeypatch:
+            def unexpected_kdf(*args, **kwargs):
+                raise AssertionError("KDF must not run for an invalid carrier")
 
-    monkeypatch.setattr("pcea.cipher.key_stream", unexpected_kdf)
-    with pytest.raises(ValueError, match="exact integer"):
-        encrypt_seed(seed, last, word_bits=8)
+            monkeypatch.setattr("pcea.cipher.key_stream", unexpected_kdf)
+            with pytest.raises(ValueError, match="exact integer"):
+                encrypt_seed(seed, last, word_bits=8)
 
 
 def test_exact_integer_one_remains_accepted():
@@ -227,4 +228,4 @@ def test_decrypt_seed_rejects_noninteger_ciphertext():
     encrypted[0][0] = True
     with pytest.raises(ValueError, match="exact integer"):
         decrypt_seed(encrypted, _zero_seed(), word_bits=8)
-# ratios: loc_comments=100:24 imports_exports=4:17 calls_definitions=65:19
+# ratios: loc_comments=101:24 imports_exports=4:17 calls_definitions=65:19
