@@ -183,7 +183,7 @@ export default defineMsdmdCollection({
       "fields": {
         "admin_only": "false",
         "auth_boundary": "none",
-        "internal_surface": "typed length-delimited integer transcript encoding",
+        "internal_surface": "_encode_integer, _canonical_transcript",
         "module_kind": "engine",
         "module_name": "kdf",
         "network_boundary": "none",
