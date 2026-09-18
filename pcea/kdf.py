@@ -19,7 +19,7 @@ structure.
 #   summary: hash-based key-stream derivation keyed by hierarchical address plus heptagram neighbors
 #   owner: Erin Spencer
 #   public_surface: key_stream
-#   internal_surface: typed length-delimited integer transcript encoding
+#   internal_surface: _encode_integer, _canonical_transcript
 #   auth_boundary: none
 #   storage_boundary: none
 #   network_boundary: none

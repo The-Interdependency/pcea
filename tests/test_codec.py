@@ -1,4 +1,4 @@
-# ratios: loc_comments=84:24 imports_exports=2:20 calls_definitions=38:20
+# ratios: loc_comments=82:24 imports_exports=2:20 calls_definitions=37:20
 # GPT/Claude generated; context, prompt Erin Spencer
 import pytest
 
@@ -162,9 +162,8 @@ def test_roundtrip_small_word_bits():
             assert from_fixed(to_fixed(u, p, k), p) == u
 
 
-@pytest.mark.parametrize(
-    "call",
-    [
+def test_codec_rejects_bool_in_every_integer_domain():
+    calls = (
         lambda: mobius_encode(True, 8),
         lambda: mobius_encode(1, True),
         lambda: mobius_decode(True, 8),
@@ -175,9 +174,8 @@ def test_roundtrip_small_word_bits():
         lambda: to_fixed(1, 2, True),
         lambda: from_fixed([True], 2),
         lambda: from_fixed([1], True),
-    ],
-)
-def test_codec_rejects_bool_in_every_integer_domain(call):
-    with pytest.raises(ValueError):
-        call()
-# ratios: loc_comments=84:24 imports_exports=2:20 calls_definitions=38:20
+    )
+    for call in calls:
+        with pytest.raises(ValueError):
+            call()
+# ratios: loc_comments=82:24 imports_exports=2:20 calls_definitions=37:20
